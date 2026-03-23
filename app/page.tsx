@@ -92,7 +92,7 @@ function Nav() {
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
           <a href="#why-quarq">Why Quarq</a>
-          <a href="#team">Team</a>
+
         </div>
         <a href="#waitlist" className="nav-cta">Join Waitlist</a>
       </div>
@@ -391,31 +391,7 @@ export default function Home() {
       </Section>
 
       {/* ─── FOUNDER ─── */}
-      <Section id="team">
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <p className="section-label">Team</p>
-          <h2 className="section-title">Built by builders.</h2>
-        </div>
-        <div className="card" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div className="avatar-placeholder">VK</div>
-          </div>
-          <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}>Vaibhav</h3>
-          <p style={{ fontSize: '14px', color: 'var(--accent)', marginBottom: '16px', fontWeight: 500 }}>Founder</p>
-          <p className="card-text" style={{ maxWidth: '440px', margin: '0 auto 20px', textAlign: 'center' }}>
-            Ex-IIT Roorkee. Built and sold a crypto infrastructure company.
-            Shipped smart contracts handling billions in DeFi. Now building the future of personal AI.
-          </p>
-          <a
-            href="https://x.com/0xvk__"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none', transition: 'color 0.2s' }}
-          >
-            @0xvk__ on X →
-          </a>
-        </div>
-      </Section>
+
 
       {/* ─── BOTTOM CTA ─── */}
       <Section>
