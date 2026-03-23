@@ -197,7 +197,7 @@ export default function Home() {
       <Section id="how-it-works">
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <p className="section-label">How it works</p>
-          <h2 className="section-title">Three layers of knowing.</h2>
+          <h2 className="section-title">Three layers of continual learning.</h2>
           <p className="section-sub">
             Quarq doesn&apos;t use one memory approach. It uses all three. Different patterns belong in
             different places. Quarq routes between them automatically, because it knows you.
