@@ -135,7 +135,18 @@ function Nav() {
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner">
-        <a href="#" className="nav-logo">Quarq</a>
+        <a href="#" className="nav-logo">
+          <img
+            src="/quarq-logo.jpg"
+            alt="Quarq"
+            style={{
+              height: '36px',
+              width: 'auto',
+              objectFit: 'contain',
+              display: 'block',
+            }}
+          />
+        </a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
           <a href="#why-quarq">Why Quarq</a>
