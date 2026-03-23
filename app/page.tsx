@@ -48,7 +48,7 @@ function WaitlistForm({ btnLabel = 'Join Waitlist' }: { btnLabel?: string }) {
     </form>
   )
 }
-import { RefreshCw, FileText, Unlink, Brain, Layers, Fingerprint, Zap, Globe, Clock, Eye, Wifi, Radio } from 'lucide-react'
+import { Brain, Layers, Fingerprint, Eye, Wifi, Radio } from 'lucide-react'
 
 /* ─── Particle Canvas ─── */
 function ParticleCanvas() {
@@ -138,6 +138,7 @@ function Nav() {
         <a href="#" className="nav-logo">Quarq</a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
+          <a href="#why-quarq">Why Quarq</a>
         </div>
         <a href="#waitlist" className="nav-cta">Join Waitlist</a>
       </div>
@@ -190,44 +191,6 @@ export default function Home() {
           <p className="micro-copy">No spam. Early access only.</p>
         </div>
       </div>
-
-      {/* ─── PROBLEM ─── */}
-      <Section>
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <p className="section-label">The problem</p>
-          <h2 className="section-title">Every conversation starts from zero.</h2>
-          <p className="section-sub">
-            AI assistants are powerful. But they don&apos;t know you. Every session is a blank slate —
-            no context, no continuity, no understanding of who you are.
-          </p>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-          <div className="card">
-            <CardIcon><RefreshCw size={20} /></CardIcon>
-            <h3 className="card-title">Stateless by design</h3>
-            <p className="card-text">
-              Every conversation starts fresh. Your AI has no memory of yesterday, last week, or last month.
-              You re-explain yourself every time.
-            </p>
-          </div>
-          <div className="card">
-            <CardIcon><FileText size={20} /></CardIcon>
-            <h3 className="card-title">Memory is just notes</h3>
-            <p className="card-text">
-              Current &ldquo;memory&rdquo; features are retrieval hacks — keyword lookups on stored text.
-              They don&apos;t understand context, only regurgitate fragments.
-            </p>
-          </div>
-          <div className="card">
-            <CardIcon><Unlink size={20} /></CardIcon>
-            <h3 className="card-title">Sessions, not relationships</h3>
-            <p className="card-text">
-              You don&apos;t have a relationship with your AI. You have isolated sessions.
-              There&apos;s no continuity, no growth, no adaptation.
-            </p>
-          </div>
-        </div>
-      </Section>
 
       {/* ─── HOW IT WORKS ─── */}
       <Section id="how-it-works">
@@ -379,12 +342,17 @@ export default function Home() {
       </Section>
 
       {/* ─── COMPARISON ─── */}
-      <Section>
+      <Section id="why-quarq">
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <p className="section-label">Comparison</p>
+          <p className="section-label">Why Quarq</p>
           <h2 className="section-title">Memory vs. Knowing.</h2>
-          <p style={{ fontSize: '22px', fontWeight: 600, color: 'var(--text)', marginTop: '24px', lineHeight: 1.4 }}>
-            Letta reads your history.<br />
+          <p className="section-sub">
+            Every AI assistant today resets when you close the tab. They store notes.
+            They retrieve fragments. They don&apos;t grow. Quarq is built differently —
+            from the ground up, for continuity.
+          </p>
+          <p style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text)', marginTop: '32px', lineHeight: 1.5 }}>
+            Others read your history.<br />
             <span style={{ color: 'var(--accent)' }}>Quarq becomes your history.</span>
           </p>
         </div>
@@ -392,13 +360,15 @@ export default function Home() {
           {/* Others */}
           <div className="comparison-card-left">
             <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'var(--red)', marginBottom: '24px' }}>
-              Others
+              Today&apos;s AI Assistants
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {[
+                'Every session starts from zero',
+                'Memory is just stored text fragments',
+                'No relationship — only isolated sessions',
                 'Context window as "memory"',
                 'Retrieval-based recall',
-                'Stateless between sessions',
                 'Same model for everyone',
               ].map((item) => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -407,7 +377,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: '12px', color: 'var(--text-faint)', fontStyle: 'italic' }}>Today&apos;s AI assistants</p>
           </div>
 
           {/* Quarq */}
@@ -415,11 +384,13 @@ export default function Home() {
             <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'var(--accent)', marginBottom: '24px' }}>
               Quarq
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {[
-                'Behavioral fingerprint in weights',
-                'Continuous learning loop',
-                'Persistent across all sessions',
+                'Continuous — never resets',
+                'Behavioral fingerprint baked into the model',
+                'A presence, not a session',
+                'Hybrid memory: weights + DB + context',
+                'Learns your patterns, not just your facts',
                 'Unique model per person',
               ].map((item) => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -428,7 +399,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <p style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-faint)', lineHeight: '1.6' }}>
+            <p style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-faint)', lineHeight: '1.6', marginTop: '24px' }}>
               &ldquo;It doesn&apos;t remember you. It knows you.&rdquo;
             </p>
           </div>
