@@ -482,7 +482,7 @@ export default function Home() {
             <p style={{ fontSize: '13px', color: 'var(--text-faint)' }}>AI that knows you.</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <a href="https://x.com/0xvk__" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
+            <a href="https://x.com/QuarqLabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
               Twitter
             </a>
             <a href="https://github.com/quarqlabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
