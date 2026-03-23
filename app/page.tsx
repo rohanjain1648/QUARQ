@@ -476,7 +476,7 @@ export default function Home() {
       <footer className="footer">
         <div className="footer-inner">
           <div>
-            <p style={{ fontWeight: 700, color: 'var(--accent)', marginBottom: '4px', fontSize: '16px' }}>Quarq</p>
+            <img src="/quarq-logo.jpg" alt="Quarq" style={{ height: '28px', width: 'auto', objectFit: 'contain', display: 'block', marginBottom: '4px' }} />
             <p style={{ fontSize: '13px', color: 'var(--text-faint)' }}>AI that knows you.</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
