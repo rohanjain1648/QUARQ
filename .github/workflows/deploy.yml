@@ -25,7 +25,9 @@ jobs:
       - name: Inject Vercel project settings
         run: |
           mkdir -p .vercel
-          echo '{"projectId":"prj_7uT9ggczLRhPbgnRHU6XVt3YBPJz","orgId":"team_dOhb6312wndMeuoDrn1XJXuo"}' > .vercel/project.json
+          cat > .vercel/project.json << 'PROJEOF'
+          {"projectId":"prj_7uT9ggczLRhPbgnRHU6XVt3YBPJz","orgId":"team_dOhb6312wndMeuoDrn1XJXuo","settings":{"framework":"nextjs","nodeVersion":"20.x"}}
+          PROJEOF
 
       - name: Build
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
