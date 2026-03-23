@@ -137,7 +137,7 @@ function Nav() {
       <div className="nav-inner">
         <a href="#" className="nav-logo">
           <img
-            src="/quarq-logo.jpg"
+            src="/quarq-wordmark.jpg"
             alt="Quarq"
             style={{
               height: '36px',
