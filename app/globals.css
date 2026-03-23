@@ -139,6 +139,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 .nav-logo {
   font-size: 18px;
@@ -149,6 +150,9 @@ body {
 .nav-links {
   display: flex;
   gap: 32px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .nav-links a {
   font-size: 14px;
@@ -223,10 +227,11 @@ body {
 }
 .hero-title {
   font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
-  font-size: 64px;
+  font-size: clamp(36px, 5.5vw, 64px);
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin-bottom: 24px;
+  white-space: nowrap;
 }
 .hero-subtitle {
   font-size: 18px;
