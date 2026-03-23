@@ -15,14 +15,14 @@ jobs:
         run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: team_dOhb6312wndMeuoDrn1XJXuo
-          VERCEL_PROJECT_ID: prj_fTQa8KR4eFuZM1vWUmIXH2BDMp3X
+          VERCEL_PROJECT_ID: prj_nSXCUADGGQn7sFBE2STgg3qfQTU9
       - name: Build with Vercel
         run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: team_dOhb6312wndMeuoDrn1XJXuo
-          VERCEL_PROJECT_ID: prj_fTQa8KR4eFuZM1vWUmIXH2BDMp3X
+          VERCEL_PROJECT_ID: prj_nSXCUADGGQn7sFBE2STgg3qfQTU9
       - name: Deploy prebuilt to Vercel
         run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: team_dOhb6312wndMeuoDrn1XJXuo
-          VERCEL_PROJECT_ID: prj_fTQa8KR4eFuZM1vWUmIXH2BDMp3X
+          VERCEL_PROJECT_ID: prj_nSXCUADGGQn7sFBE2STgg3qfQTU9
