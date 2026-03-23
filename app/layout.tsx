@@ -6,10 +6,10 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
 
 export const metadata: Metadata = {
-  title: 'Quarq — Every AI today is a session. Quarq is a presence.',
-  description: 'An always-on personal AI assistant that learns who you are — not from notes, but from its weights. Your behavioral fingerprint, baked into the model itself.',
+  title: 'Quarq: Every AI today is a session. Quarq is a presence.',
+  description: 'An always-on personal AI assistant that learns who you are, not from notes, but from its weights. Your behavioral fingerprint, baked into the model itself.',
   openGraph: {
-    title: 'Quarq — Every AI today is a session. Quarq is a presence.',
+    title: 'Quarq: Every AI today is a session. Quarq is a presence.',
     description: 'An always-on personal AI assistant that learns who you are.',
     type: 'website',
     url: 'https://quarq.io',

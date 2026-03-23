@@ -198,7 +198,7 @@ export default function Home() {
           <p className="section-label">How it works</p>
           <h2 className="section-title">Three layers of knowing.</h2>
           <p className="section-sub">
-            Quarq doesn&apos;t use one memory approach — it uses all three. Different patterns belong in
+            Quarq doesn&apos;t use one memory approach. It uses all three. Different patterns belong in
             different places. Quarq routes between them automatically, because it knows you.
           </p>
         </div>
@@ -228,7 +228,7 @@ export default function Home() {
               <h3 className="card-title" style={{ marginBottom: 0 }}>Hybrid Memory Routing</h3>
             </div>
             <p className="card-text">
-              Not all memories are equal. Behavioral patterns get baked into weights — zero retrieval cost.
+              Not all memories are equal. Behavioral patterns get baked into weights, with zero retrieval cost.
               Explicit facts go into a structured memory database. Active context stays in the window.
               Quarq routes between all three, using each layer for exactly what it does best.
             </p>
@@ -245,7 +245,7 @@ export default function Home() {
               <h3 className="card-title" style={{ marginBottom: 0 }}>Personal AI Assistant</h3>
             </div>
             <p className="card-text">
-              Your Quarq AI assistant runs continuously — always observing, always routing, always updating.
+              Your Quarq AI assistant runs continuously: always observing, always routing, always updating.
               It decides what belongs in your weights, what belongs in your memory database, and what
               belongs in the active session. Automatically.
             </p>
@@ -265,7 +265,7 @@ export default function Home() {
           <p className="section-sub">Three layers. Each optimized for what it does best. One unified presence.</p>
         </div>
         <div style={{ maxWidth: '640px', margin: '0 auto', position: 'relative' }}>
-          {/* Layer 3 — Context (top) */}
+          {/* Layer 3: Context (top) */}
           <div style={{
             background: 'rgba(91,127,255,0.06)',
             border: '1px solid rgba(91,127,255,0.2)',
@@ -277,7 +277,7 @@ export default function Home() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
-                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 3 — Context Window</span>
+                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 3: Context Window</span>
               </div>
               <span className="tag">Real-time</span>
             </div>
@@ -291,7 +291,7 @@ export default function Home() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="rgba(91,127,255,0.4)"/></svg>
           </div>
 
-          {/* Layer 2 — Memory DB (middle) */}
+          {/* Layer 2: Memory DB (middle) */}
           <div style={{
             background: 'rgba(91,127,255,0.04)',
             border: '1px solid rgba(91,127,255,0.15)',
@@ -301,7 +301,7 @@ export default function Home() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(91,127,255,0.7)' }} />
-                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(91,127,255,0.7)' }}>Layer 2 — Memory Database</span>
+                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(91,127,255,0.7)' }}>Layer 2: Memory Database</span>
               </div>
               <span className="tag">Semantic graph</span>
             </div>
@@ -315,7 +315,7 @@ export default function Home() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="rgba(91,127,255,0.4)"/></svg>
           </div>
 
-          {/* Layer 1 — Weights (foundation) */}
+          {/* Layer 1: Weights (foundation) */}
           <div style={{
             background: 'rgba(91,127,255,0.08)',
             border: '1px solid rgba(91,127,255,0.3)',
@@ -326,19 +326,19 @@ export default function Home() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 12px var(--accent)', animation: 'pulse-slow 3s ease-in-out infinite' }} />
-                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 1 — Model Weights (SLM)</span>
+                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 1: Model Weights (SLM)</span>
               </div>
               <span className="tag">Continual LoRA</span>
             </div>
-            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Behavioral Layer — The Foundation</p>
-            <p className="card-text">Your communication style, decision patterns, implicit preferences — baked into the model itself. No retrieval. No prompting. The model <em>is</em> this way because of you.</p>
+            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Behavioral Layer: The Foundation</p>
+            <p className="card-text">Your communication style, decision patterns, and implicit preferences, baked into the model itself. No retrieval. No prompting. The model <em>is</em> this way because of you.</p>
             <p style={{ marginTop: '16px', fontSize: '13px', color: 'var(--accent)', fontWeight: 500 }}>
-              ← Others only inject context. Quarq optimizes all three layers — and routes between them intelligently.
+              ← Others only inject context. Quarq optimizes all three layers, routing between them intelligently.
             </p>
           </div>
 
           <p style={{ textAlign: 'center', fontStyle: 'italic', color: 'var(--text-faint)', marginTop: '32px', fontSize: '14px' }}>
-            The SLM knows what&apos;s stored where — and routes between all three.
+            The SLM knows what&apos;s stored where, routing between all three.
           </p>
         </div>
       </Section>
@@ -368,7 +368,7 @@ export default function Home() {
               {[
                 'Every session starts from zero',
                 'Memory is just stored text fragments',
-                'No relationship — only isolated sessions',
+                'No relationship, only isolated sessions',
                 'Context window as "memory"',
                 'Retrieval-based recall',
                 'Same model for everyone',
@@ -388,7 +388,7 @@ export default function Home() {
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {[
-                'Continuous — never resets',
+                'Continuous. Never resets.',
                 'Behavioral fingerprint baked into the model',
                 'A presence, not a session',
                 'Hybrid memory: weights + DB + context',
@@ -430,7 +430,7 @@ export default function Home() {
             <CardIcon amber><Eye size={20} /></CardIcon>
             <h3 className="card-title">Ambient Awareness</h3>
             <p className="card-text">
-              It observes patterns across your digital life — how you write, what you prioritize,
+              It observes patterns across your digital life: how you write, what you prioritize,
               when you&apos;re focused vs. scattered.
             </p>
           </div>
@@ -438,7 +438,7 @@ export default function Home() {
             <CardIcon amber><Wifi size={20} /></CardIcon>
             <h3 className="card-title">Cross-Platform</h3>
             <p className="card-text">
-              One model, every surface. Desktop, mobile, voice — your Quarq
+              One model, every surface. Desktop, mobile, voice. Your Quarq
               is the same presence everywhere.
             </p>
           </div>
@@ -455,7 +455,7 @@ export default function Home() {
             Be first to experience Quarq.
           </h2>
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '32px' }}>
-            We&apos;re building the AI assistant that actually grows with you — behavioral fingerprinting,
+            We&apos;re building the AI assistant that actually grows with you: behavioral fingerprinting,
             hybrid memory, and a presence that never resets. Join the waitlist for early access.
           </p>
           <WaitlistForm btnLabel="Get Early Access" />
