@@ -198,8 +198,8 @@ export default function Home() {
           <p className="section-label">How it works</p>
           <h2 className="section-title">Three layers of knowing.</h2>
           <p className="section-sub">
-            Quarq doesn&apos;t store memories — it absorbs patterns. Your preferences, your reasoning style,
-            your communication quirks become part of the model itself.
+            Quarq doesn&apos;t use one memory approach — it uses all three. Different patterns belong in
+            different places. Quarq routes between them automatically, because it knows you.
           </p>
         </div>
 
@@ -225,11 +225,12 @@ export default function Home() {
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
               <span className="tag">Step 2</span>
-              <h3 className="card-title" style={{ marginBottom: 0 }}>Weight-Level Adaptation</h3>
+              <h3 className="card-title" style={{ marginBottom: 0 }}>Hybrid Memory Routing</h3>
             </div>
             <p className="card-text">
-              Your fingerprint is baked directly into the model weights through continuous fine-tuning.
-              This isn&apos;t RAG. It&apos;s not prompt injection. It&apos;s real learning.
+              Not all memories are equal. Behavioral patterns get baked into weights — zero retrieval cost.
+              Explicit facts go into a structured memory database. Active context stays in the window.
+              Quarq routes between all three, using each layer for exactly what it does best.
             </p>
           </div>
         </div>
@@ -244,8 +245,9 @@ export default function Home() {
               <h3 className="card-title" style={{ marginBottom: 0 }}>Personal AI Assistant</h3>
             </div>
             <p className="card-text">
-              Your Quarq instance runs continuously — always learning, always adapting.
-              It&apos;s not an app you open. It&apos;s a presence that&apos;s always there.
+              Your Quarq AI assistant runs continuously — always observing, always routing, always updating.
+              It decides what belongs in your weights, what belongs in your memory database, and what
+              belongs in the active session. Automatically.
             </p>
           </div>
         </div>
@@ -331,7 +333,7 @@ export default function Home() {
             <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Behavioral Layer — The Foundation</p>
             <p className="card-text">Your communication style, decision patterns, implicit preferences — baked into the model itself. No retrieval. No prompting. The model <em>is</em> this way because of you.</p>
             <p style={{ marginTop: '16px', fontSize: '13px', color: 'var(--accent)', fontWeight: 500 }}>
-              ← This is what others don&apos;t have. Letta injects context. Quarq changes the weights.
+              ← Others only inject context. Quarq optimizes all three layers — and routes between them intelligently.
             </p>
           </div>
 
@@ -453,8 +455,8 @@ export default function Home() {
             Be first to experience Quarq.
           </h2>
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '32px' }}>
-            We&apos;re building something fundamentally different. Join the waitlist
-            for early access to your personal AI assistant.
+            We&apos;re building the AI assistant that actually grows with you — behavioral fingerprinting,
+            hybrid memory, and a presence that never resets. Join the waitlist for early access.
           </p>
           <WaitlistForm btnLabel="Get Early Access" />
           <p className="micro-copy">Limited spots. No spam.</p>
