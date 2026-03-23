@@ -2,17 +2,42 @@ name: Deploy to Vercel
 on:
   push:
     branches: [main]
+env:
+  VERCEL_ORG_ID: team_dOhb6312wndMeuoDrn1XJXuo
+  VERCEL_PROJECT_ID: prj_nSXCUADGGQn7sFBE2STgg3qfQTU9
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: team_dOhb6312wndMeuoDrn1XJXuo
-      VERCEL_PROJECT_ID: prj_nSXCUADGGQn7sFBE2STgg3qfQTU9
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - run: npm ci
-      - name: Deploy to Vercel
-        run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Build project locally
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy prebuilt to Vercel
+        id: deploy
+        continue-on-error: true
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} > /tmp/deploy_output.txt 2>&1
+        
+      - name: Show deploy output
+        run: cat /tmp/deploy_output.txt
+
+      - name: Verify deployment is live
+        run: |
+          sleep 20
+          STATUS=$(curl -s "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&teamId=$VERCEL_ORG_ID&limit=1" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" | python3 -c "import json,sys; print(json.load(sys.stdin)['deployments'][0]['readyState'])")
+          echo "Deployment status: $STATUS"
+          if [ "$STATUS" = "READY" ]; then
+            echo "✅ Deployment successful"
+          else
+            echo "❌ Deployment failed with status: $STATUS"
+            exit 1
+          fi
