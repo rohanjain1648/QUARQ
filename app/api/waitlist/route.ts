@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const GITHUB_TOKEN = process.env.GITHUB_PAT;
-const REPO = 'vk-agent-labs/quarq-website';
+const REPO = 'quarqlabs/quarq-website';
 const FILE_PATH = 'data/waitlist.json';
 
 async function getWaitlist(): Promise<string[]> {
