@@ -485,7 +485,7 @@ export default function Home() {
             <a href="https://x.com/0xvk__" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
               Twitter
             </a>
-            <a href="https://github.com/vk-agent-labs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
+            <a href="https://github.com/quarqlabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
               GitHub
             </a>
             <span style={{ fontSize: '13px', color: 'var(--text-faint)' }}>
