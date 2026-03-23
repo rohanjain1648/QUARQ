@@ -3,44 +3,13 @@ on:
   push:
     branches: [main]
 
-env:
-  VERCEL_ORG_ID: team_dOhb6312wndMeuoDrn1XJXuo
-  VERCEL_PROJECT_ID: prj_7uT9ggczLRhPbgnRHU6XVt3YBPJz
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - run: npm ci
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Inject Vercel project settings
+      - name: Trigger Mac Mini deploy
         run: |
-          mkdir -p .vercel
-          cat > .vercel/project.json << 'PROJEOF'
-          {"projectId":"prj_7uT9ggczLRhPbgnRHU6XVt3YBPJz","orgId":"team_dOhb6312wndMeuoDrn1XJXuo","settings":{"framework":"nextjs","nodeVersion":"20.x"}}
-          PROJEOF
-
-      - name: Build
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy prebuilt
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} || true
-
-      - name: Verify deployment is READY
-        run: |
-          sleep 30
-          STATE=$(curl -s \
-            "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&teamId=$VERCEL_ORG_ID&limit=1" \
-            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-            | python3 -c "import json,sys; print(json.load(sys.stdin)['deployments'][0]['readyState'])")
-          echo "Deployment state: $STATE"
-          [ "$STATE" = "READY" ] || exit 1
+          curl -s -X POST https://deploy.quarq.io/website \
+            -H "Content-Type: application/json" \
+            -d '{"secret":"${{ secrets.DEPLOY_WEBHOOK_SECRET }}"}'
+          echo "Deploy triggered on Mac Mini"
