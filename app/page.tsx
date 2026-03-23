@@ -136,16 +136,16 @@ function Nav() {
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner">
         <a href="#" className="nav-logo">
-          <img
-            src="/quarq-logo.jpg"
-            alt="Quarq"
-            style={{
-              height: '36px',
-              width: 'auto',
-              objectFit: 'contain',
-              display: 'block',
-            }}
-          />
+          <svg height="28" viewBox="0 0 90 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+            <text
+              x="0" y="22"
+              fontFamily="var(--font-inter), Inter, sans-serif"
+              fontWeight="700"
+              fontSize="24"
+              fill="white"
+              letterSpacing="-0.5"
+            >Quarq</text>
+          </svg>
         </a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
@@ -476,7 +476,9 @@ export default function Home() {
       <footer className="footer">
         <div className="footer-inner">
           <div>
-            <img src="/quarq-logo.jpg" alt="Quarq" style={{ height: '28px', width: 'auto', objectFit: 'contain', display: 'block', marginBottom: '4px' }} />
+            <svg height="22" viewBox="0 0 90 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', marginBottom: '4px' }}>
+              <text x="0" y="22" fontFamily="var(--font-inter), Inter, sans-serif" fontWeight="700" fontSize="24" fill="white" letterSpacing="-0.5">Quarq</text>
+            </svg>
             <p style={{ fontSize: '13px', color: 'var(--text-faint)' }}>AI that knows you.</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
