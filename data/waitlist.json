@@ -1,5 +1,6 @@
 [
   "cleanup-test@quarq.io",
   "final-verify@quarq.io",
-  "neon-test@quarq.io"
+  "neon-test@quarq.io",
+  "neon-live-test@quarq.io"
 ]
