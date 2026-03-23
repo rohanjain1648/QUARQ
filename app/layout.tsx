@@ -22,8 +22,14 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   icons: {
-    icon: '/icon.png',
-    apple: '/apple-icon.png',
+    icon: [
+      { url: '/quarq-icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/quarq-icon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/quarq-icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    shortcut: '/quarq-icon-32.png',
   },
 }
 
