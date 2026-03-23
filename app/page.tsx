@@ -1,6 +1,53 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, FormEvent } from 'react'
+
+/* ─── Waitlist Form ─── */
+function WaitlistForm({ btnLabel = 'Join Waitlist' }: { btnLabel?: string }) {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [msg, setMsg] = useState('')
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json()
+      if (data.ok) { setStatus('done'); setMsg(data.message) }
+      else { setStatus('error'); setMsg(data.message || 'Something went wrong') }
+    } catch {
+      setStatus('error'); setMsg('Something went wrong. Try again.')
+    }
+  }
+
+  if (status === 'done') return (
+    <p style={{ color: 'var(--accent)', fontSize: '15px', fontWeight: 500, padding: '16px 0' }}>✓ {msg}</p>
+  )
+
+  return (
+    <form className="email-form" onSubmit={submit}>
+      <input
+        type="email"
+        className="email-input"
+        placeholder="you@email.com"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        required
+        disabled={status === 'loading'}
+      />
+      <button type="submit" className="email-btn" disabled={status === 'loading'}>
+        {status === 'loading' ? '...' : btnLabel}
+      </button>
+      {status === 'error' && <p style={{ color: '#ff6b6b', fontSize: '13px', marginTop: '8px' }}>{msg}</p>}
+    </form>
+  )
+}
 import { RefreshCw, FileText, Unlink, Brain, Layers, Fingerprint, Zap, Shield, Globe, Clock, Eye, Wifi, Radio } from 'lucide-react'
 
 /* ─── Particle Canvas ─── */
@@ -142,10 +189,7 @@ export default function Home() {
             An always-on AI runtime that learns who you are — not from notes,
             but from its weights. Your behavioral fingerprint, baked into the model.
           </p>
-          <form className="email-form" onSubmit={(e) => e.preventDefault()} id="waitlist">
-            <input type="email" placeholder="you@email.com" className="email-input" />
-            <button type="submit" className="email-btn">Join Waitlist</button>
-          </form>
+          <div id="waitlist"><WaitlistForm btnLabel="Join Waitlist" /></div>
           <p className="micro-copy">No spam. Early access only.</p>
         </div>
       </div>
@@ -403,10 +447,7 @@ export default function Home() {
             We&apos;re building something fundamentally different. Join the waitlist
             for early access to your personal AI runtime.
           </p>
-          <form className="email-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="you@email.com" className="email-input" />
-            <button type="submit" className="email-btn">Get Early Access</button>
-          </form>
+          <WaitlistForm btnLabel="Get Early Access" />
           <p className="micro-copy">Limited spots. Launching Q3 2026.</p>
         </div>
       </Section>
