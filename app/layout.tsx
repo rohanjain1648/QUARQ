@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     creator: '@0xvk__',
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: '/icon.png',
+    apple: '/apple-icon.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
