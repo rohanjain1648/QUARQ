@@ -212,8 +212,7 @@ export default function Home() {
               <h3 className="card-title" style={{ marginBottom: 0 }}>Behavioral Fingerprinting</h3>
             </div>
             <p className="card-text">
-              Quarq observes how you think, decide, and communicate. It builds a continuous behavioral model —
-              not a list of facts, but a deep understanding of your patterns.
+              Quarq observes how you think, decide, and communicate. It builds a continuous behavioral model: not a list of facts, but a deep understanding of your patterns.
             </p>
           </div>
         </div>
@@ -350,8 +349,7 @@ export default function Home() {
           <h2 className="section-title">Memory vs. Knowing.</h2>
           <p className="section-sub">
             Every AI assistant today resets when you close the tab. They store notes.
-            They retrieve fragments. They don&apos;t grow. Quarq is built differently —
-            from the ground up, for continuity.
+            They retrieve fragments. They don&apos;t grow. Quarq is built differently, from the ground up, for continuity.
           </p>
           <p style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text)', marginTop: '32px', lineHeight: 1.5 }}>
             Others read your history.<br />
