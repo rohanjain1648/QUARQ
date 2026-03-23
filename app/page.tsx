@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { RefreshCw, FileText, Unlink, Brain, Database, Zap, Mic, Eye, Layers, GitBranch, X, Github, Menu } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { RefreshCw, FileText, Unlink, Brain, Layers, Fingerprint, Zap, Shield, Globe, Clock, Eye, Wifi, Radio } from 'lucide-react'
 
-// ─── PARTICLE CANVAS ───────────────────────────────────────────────────────────
+/* ─── Particle Canvas ─── */
 function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -13,49 +13,50 @@ function ParticleCanvas() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) return
-
     let animId: number
-    const pts: { x: number; y: number; vx: number; vy: number }[] = []
-    const N = 60
+    let particles: { x: number; y: number; vx: number; vy: number; r: number; o: number }[] = []
 
     const resize = () => {
-      canvas.width = canvas.offsetWidth
-      canvas.height = canvas.offsetHeight
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
     }
     resize()
     window.addEventListener('resize', resize)
 
-    for (let i = 0; i < N; i++) {
-      pts.push({
+    for (let i = 0; i < 60; i++) {
+      particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 1.5 + 0.5,
+        o: Math.random() * 0.4 + 0.1,
       })
     }
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      for (let i = 0; i < N; i++) {
-        const p = pts[i]
-        p.x += p.vx; p.y += p.vy
+      particles.forEach((p) => {
+        p.x += p.vx
+        p.y += p.vy
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1
         ctx.beginPath()
-        ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(79,110,247,0.5)'
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(91,127,255,${p.o})`
         ctx.fill()
-        for (let j = i + 1; j < N; j++) {
-          const q = pts[j]
-          const dx = p.x - q.x, dy = p.y - q.y
-          const d = Math.sqrt(dx * dx + dy * dy)
-          if (d < 120) {
+      })
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x
+          const dy = particles[i].y - particles[j].y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist < 150) {
             ctx.beginPath()
-            ctx.moveTo(p.x, p.y)
-            ctx.lineTo(q.x, q.y)
-            ctx.strokeStyle = `rgba(79,110,247,${0.15 * (1 - d / 120)})`
+            ctx.moveTo(particles[i].x, particles[i].y)
+            ctx.lineTo(particles[j].x, particles[j].y)
+            ctx.strokeStyle = `rgba(91,127,255,${0.06 * (1 - dist / 150)})`
             ctx.lineWidth = 0.5
             ctx.stroke()
           }
@@ -64,322 +65,396 @@ function ParticleCanvas() {
       animId = requestAnimationFrame(draw)
     }
     draw()
-    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize) }
+
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('resize', resize)
+    }
   }, [])
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ opacity: 0.6 }} />
+  return <canvas ref={canvasRef} className="hero-canvas" />
 }
 
-// ─── WAITLIST FORM ─────────────────────────────────────────────────────────────
-function WaitlistForm({ variant = 'hero' }: { variant?: 'hero' | 'cta' }) {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
-  const [msg, setMsg] = useState('')
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setStatus('loading')
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      })
-      const data = await res.json()
-      if (res.ok) { setStatus('done'); setMsg(data.message || 'You\'re on the list!') }
-      else { setStatus('error'); setMsg(data.error || 'Something went wrong.') }
-    } catch { setStatus('error'); setMsg('Network error. Try again.') }
-  }
-
-  const isHero = variant === 'hero'
-  return status === 'done' ? (
-    <p className={`${isHero ? 'text-lg' : 'text-base'} text-[#4F6EF7] font-medium`}>✓ {msg}</p>
-  ) : (
-    <form onSubmit={submit} className={`flex ${isHero ? 'flex-col sm:flex-row' : 'flex-col sm:flex-row'} gap-3`}>
-      <input
-        type="email" required value={email} onChange={e => setEmail(e.target.value)}
-        placeholder="you@example.com"
-        className={`flex-1 bg-white/5 border border-white/10 rounded-lg px-4 ${isHero ? 'py-3 text-base' : 'py-3 text-sm'} text-white placeholder:text-white/30 focus:outline-none focus:border-[#4F6EF7]/60 transition-colors`}
-      />
-      <button type="submit" disabled={status === 'loading'}
-        className={`${isHero ? 'px-6 py-3 text-base' : 'px-6 py-3 text-sm'} bg-[#4F6EF7] hover:bg-[#3D5CE5] disabled:opacity-60 text-white font-semibold rounded-lg transition-all duration-200 whitespace-nowrap`}>
-        {status === 'loading' ? 'Joining...' : isHero ? 'Get Early Access' : 'Request Access'}
-      </button>
-      {status === 'error' && <p className="text-red-400 text-sm">{msg}</p>}
-    </form>
-  )
-}
-
-// ─── NAV ───────────────────────────────────────────────────────────────────────
+/* ─── Nav ─── */
 function Nav() {
   const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', fn)
-    return () => window.removeEventListener('scroll', fn)
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5' : ''}`}>
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#" className="text-[#4F6EF7] font-bold text-xl tracking-tight">Quarq</a>
-        <div className="hidden md:flex items-center gap-8 text-sm text-white/60">
-          <a href="#how-it-works" className="hover:text-white transition-colors">How it works</a>
-          <a href="#why-quarq" className="hover:text-white transition-colors">Why Quarq</a>
-          <a href="#team" className="hover:text-white transition-colors">Team</a>
+    <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
+      <div className="nav-inner">
+        <a href="#" className="nav-logo">Quarq</a>
+        <div className="nav-links">
+          <a href="#how-it-works">How it works</a>
+          <a href="#why-quarq">Why Quarq</a>
+          <a href="#team">Team</a>
         </div>
-        <a href="#waitlist" className="hidden md:block px-4 py-2 bg-[#4F6EF7] hover:bg-[#3D5CE5] text-white text-sm font-semibold rounded-lg transition-colors">
-          Join Waitlist
-        </a>
-        <button onClick={() => setOpen(!open)} className="md:hidden text-white/60 hover:text-white">
-          <Menu size={20} />
-        </button>
+        <a href="#waitlist" className="nav-cta">Join Waitlist</a>
       </div>
-      {open && (
-        <div className="md:hidden bg-[#0A0A0A]/95 backdrop-blur-md border-t border-white/5 px-6 py-4 flex flex-col gap-4 text-sm">
-          <a href="#how-it-works" onClick={() => setOpen(false)} className="text-white/60 hover:text-white">How it works</a>
-          <a href="#why-quarq" onClick={() => setOpen(false)} className="text-white/60 hover:text-white">Why Quarq</a>
-          <a href="#team" onClick={() => setOpen(false)} className="text-white/60 hover:text-white">Team</a>
-          <a href="#waitlist" onClick={() => setOpen(false)} className="text-[#4F6EF7] font-semibold">Join Waitlist →</a>
-        </div>
-      )}
     </nav>
   )
 }
 
-// ─── MAIN PAGE ─────────────────────────────────────────────────────────────────
+/* ─── Section Wrapper ─── */
+function Section({ id, children, className = '' }: { id?: string; children: React.ReactNode; className?: string }) {
+  return (
+    <section id={id} className={`section ${className}`}>
+      <div className="container">
+        {children}
+      </div>
+    </section>
+  )
+}
+
+/* ─── Icon wrapper for cards ─── */
+function CardIcon({ children, amber = false }: { children: React.ReactNode; amber?: boolean }) {
+  return (
+    <div className={`card-icon ${amber ? 'card-icon-amber' : ''}`}>
+      {children}
+    </div>
+  )
+}
+
+/* ─── Main Page ─── */
 export default function Home() {
   return (
-    <main className="bg-[#0A0A0A] text-white">
+    <>
       <Nav />
 
-      {/* SECTION 2: HERO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      {/* ─── HERO ─── */}
+      <div className="hero">
         <ParticleCanvas />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0A]/20 to-[#0A0A0A]" />
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#4F6EF7]/10 border border-[#4F6EF7]/20 rounded-full text-[#4F6EF7] text-xs font-medium mb-10 tracking-wide uppercase">
-            Coming soon · Private beta
-          </div>
-          <h1 className="font-[var(--font-playfair)] text-5xl sm:text-6xl md:text-7xl leading-tight mb-4">
+        <div className="hero-gradient" />
+        <div className="hero-content">
+          <div className="hero-badge">Coming soon · Private beta</div>
+          <h1 className="hero-title" style={{ color: 'var(--text)' }}>
             Every AI today is a session.
           </h1>
-          <h1 className="font-[var(--font-playfair)] text-5xl sm:text-6xl md:text-7xl leading-tight text-[#4F6EF7] mb-8">
+          <h2 className="hero-title" style={{ color: 'var(--accent)', marginBottom: '24px' }}>
             Quarq is a presence.
-          </h1>
-          <p className="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">
-            An always-on AI that learns who you are — not from notes, but from its weights.
-            Your behavioral fingerprint, baked into the model itself.
+          </h2>
+          <p className="hero-subtitle">
+            An always-on AI runtime that learns who you are — not from notes,
+            but from its weights. Your behavioral fingerprint, baked into the model.
           </p>
-          <div className="max-w-lg mx-auto mb-4">
-            <WaitlistForm variant="hero" />
-          </div>
-          <p className="text-white/25 text-sm">Be among the first. No spam. No noise.</p>
+          <form className="email-form" onSubmit={(e) => e.preventDefault()} id="waitlist">
+            <input type="email" placeholder="you@email.com" className="email-input" />
+            <button type="submit" className="email-btn">Join Waitlist</button>
+          </form>
+          <p className="micro-copy">No spam. Early access only.</p>
         </div>
-      </section>
+      </div>
 
-      {/* SECTION 3: THE PROBLEM */}
-      <section className="py-28 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Every conversation starts from zero.</h2>
-            <p className="text-white/40 text-lg max-w-xl mx-auto">AI assistants are powerful. But they don't know you. They never will — unless we fix the architecture.</p>
+      {/* ─── PROBLEM ─── */}
+      <Section>
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <p className="section-label">The problem</p>
+          <h2 className="section-title">Every conversation starts from zero.</h2>
+          <p className="section-sub">
+            AI assistants are powerful. But they don&apos;t know you. Every session is a blank slate —
+            no context, no continuity, no understanding of who you are.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          <div className="card">
+            <CardIcon><RefreshCw size={20} /></CardIcon>
+            <h3 className="card-title">Stateless by design</h3>
+            <p className="card-text">
+              Every conversation starts fresh. Your AI has no memory of yesterday, last week, or last month.
+              You re-explain yourself every time.
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { icon: <RefreshCw size={22} />, title: 'Stateless by design', desc: 'Cursor, ChatGPT, Claude — every session resets. Your preferences, your patterns, your context: gone.' },
-              { icon: <FileText size={22} />, title: 'Memory is just notes', desc: 'Mem0, Supermemory, Letta — they store what you said. But reading about you isn\'t the same as knowing you.' },
-              { icon: <Unlink size={22} />, title: 'Sessions, not relationships', desc: 'AI assistants are powerful tools. But tools don\'t grow with you. Relationships do.' },
-            ].map((c, i) => (
-              <div key={i} className="glass rounded-2xl p-8 hover:border-white/15 transition-all duration-300 group">
-                <div className="w-10 h-10 rounded-lg bg-[#4F6EF7]/10 flex items-center justify-center text-[#4F6EF7] mb-5 group-hover:bg-[#4F6EF7]/20 transition-colors">{c.icon}</div>
-                <h3 className="font-semibold text-lg mb-3">{c.title}</h3>
-                <p className="text-white/45 text-sm leading-relaxed">{c.desc}</p>
-              </div>
-            ))}
+          <div className="card">
+            <CardIcon><FileText size={20} /></CardIcon>
+            <h3 className="card-title">Memory is just notes</h3>
+            <p className="card-text">
+              Current &ldquo;memory&rdquo; features are retrieval hacks — keyword lookups on stored text.
+              They don&apos;t understand context, only regurgitate fragments.
+            </p>
+          </div>
+          <div className="card">
+            <CardIcon><Unlink size={20} /></CardIcon>
+            <h3 className="card-title">Sessions, not relationships</h3>
+            <p className="card-text">
+              You don&apos;t have a relationship with your AI. You have isolated sessions.
+              There&apos;s no continuity, no growth, no adaptation.
+            </p>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* SECTION 4: HOW IT WORKS */}
-      <section id="how-it-works" className="py-28 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Three layers. One presence.</h2>
-            <p className="text-white/40 text-lg max-w-2xl mx-auto">Quarq uses a three-tier memory architecture — each layer optimized for what it stores best.</p>
+      {/* ─── HOW IT WORKS ─── */}
+      <Section id="how-it-works">
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <p className="section-label">How it works</p>
+          <h2 className="section-title">Three layers of knowing.</h2>
+          <p className="section-sub">
+            Quarq doesn&apos;t store memories — it absorbs patterns. Your preferences, your reasoning style,
+            your communication quirks become part of the model itself.
+          </p>
+        </div>
+
+        {/* Step 1 */}
+        <div className="card" style={{ display: 'flex', gap: '24px', alignItems: 'flex-start', marginBottom: '0' }}>
+          <CardIcon><Brain size={20} /></CardIcon>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+              <span className="tag">Step 1</span>
+              <h3 className="card-title" style={{ marginBottom: 0 }}>Behavioral Fingerprinting</h3>
+            </div>
+            <p className="card-text">
+              Quarq observes how you think, decide, and communicate. It builds a continuous behavioral model —
+              not a list of facts, but a deep understanding of your patterns.
+            </p>
           </div>
-          <div className="relative flex flex-col gap-0">
-            {[
-              { icon: <Brain size={24} />, label: 'Behavioral Layer', tier: 'Model Weights (SLM)', badge: 'Continual LoRA fine-tuning', desc: 'Your communication style, decision patterns, and implicit preferences — baked directly into the model. No retrieval needed. The model just is this way.', color: '#4F6EF7' },
-              { icon: <Database size={24} />, label: 'Knowledge Layer', tier: 'Memory Database', badge: 'Semantic knowledge graph', desc: 'Facts, events, relationships, documents. Structured and searchable. Fast tier for recent access, slow tier for deep history.', color: '#6B7EF7' },
-              { icon: <Zap size={24} />, label: 'Working Memory', tier: 'Context Window', badge: 'Real-time', desc: 'The active session — current task, pointers to what matters now. Small, focused, purposeful.', color: '#F59E0B' },
-            ].map((t, i) => (
-              <div key={i} className="relative">
-                <div className="glass rounded-2xl p-8 hover:border-white/15 glow-blue transition-all duration-300 group">
-                  <div className="flex items-start gap-5">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: t.color + '15', color: t.color }}>{t.icon}</div>
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-3 mb-2">
-                        <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: t.color }}>{t.label}</span>
-                        <span className="text-xs text-white/30">·</span>
-                        <span className="text-white/50 text-sm">{t.tier}</span>
-                        <span className="ml-auto px-2.5 py-0.5 rounded-full text-xs font-medium" style={{ background: t.color + '15', color: t.color }}>{t.badge}</span>
-                      </div>
-                      <p className="text-white/55 text-sm leading-relaxed">{t.desc}</p>
-                    </div>
-                  </div>
+        </div>
+        <div className="connector" />
+
+        {/* Step 2 */}
+        <div className="card" style={{ display: 'flex', gap: '24px', alignItems: 'flex-start', marginBottom: '0' }}>
+          <CardIcon><Layers size={20} /></CardIcon>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+              <span className="tag">Step 2</span>
+              <h3 className="card-title" style={{ marginBottom: 0 }}>Weight-Level Adaptation</h3>
+            </div>
+            <p className="card-text">
+              Your fingerprint is baked directly into the model weights through continuous fine-tuning.
+              This isn&apos;t RAG. It&apos;s not prompt injection. It&apos;s real learning.
+            </p>
+          </div>
+        </div>
+        <div className="connector" />
+
+        {/* Step 3 */}
+        <div className="card" style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+          <CardIcon><Fingerprint size={20} /></CardIcon>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+              <span className="tag">Step 3</span>
+              <h3 className="card-title" style={{ marginBottom: 0 }}>Personal Runtime</h3>
+            </div>
+            <p className="card-text">
+              Your Quarq instance runs continuously — always learning, always adapting.
+              It&apos;s not an app you open. It&apos;s a presence that&apos;s always there.
+            </p>
+          </div>
+        </div>
+
+        <p style={{ textAlign: 'center', fontStyle: 'italic', color: 'var(--text-faint)', marginTop: '48px', fontSize: '15px', lineHeight: '1.7' }}>
+          &ldquo;The best AI won&apos;t be the smartest one. It&apos;ll be the one that knows you.&rdquo;
+        </p>
+      </Section>
+
+      {/* ─── COMPARISON ─── */}
+      <Section>
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <p className="section-label">Comparison</p>
+          <h2 className="section-title">Memory vs. Knowing.</h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+          {/* Others */}
+          <div className="comparison-card-left">
+            <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'var(--red)', marginBottom: '24px' }}>
+              Others
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+              {[
+                'Context window as "memory"',
+                'Retrieval-based recall',
+                'Stateless between sessions',
+                'Same model for everyone',
+              ].map((item) => (
+                <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ color: 'var(--red)', fontSize: '14px' }}>✗</span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{item}</span>
                 </div>
-                {i < 2 && (
-                  <div className="flex justify-center my-1">
-                    <div className="w-px h-6 bg-gradient-to-b from-[#4F6EF7]/40 to-[#4F6EF7]/10" />
-                  </div>
-                )}
-              </div>
-            ))}
-            <p className="text-center text-white/35 text-sm mt-8 italic">The SLM routes between all three — because it knows you.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 5: THE DIFFERENCE */}
-      <section id="why-quarq" className="py-28 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Memory vs. Knowing.</h2>
-            <p className="text-white/40 text-lg">There's a fundamental difference between reading about someone and knowing them.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Others */}
-            <div className="glass rounded-2xl p-8 border-red-500/10">
-              <div className="text-red-400/70 text-xs font-semibold uppercase tracking-widest mb-4">Others — Context injection</div>
-              <ul className="space-y-3 mb-6">
-                {['Reads your history before every session', 'Stores notes. Retrieves them.', 'Hits a ceiling as context grows', 'Stateless at the core'].map((t, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-white/40 text-sm">
-                    <span className="text-red-400/50 mt-0.5">✗</span>{t}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex flex-wrap gap-2 text-xs text-white/20 border-t border-white/5 pt-4">
-                {['ChatGPT', 'Cursor', 'Letta', 'Mem0', 'Supermemory'].map(n => <span key={n} className="px-2 py-1 bg-white/5 rounded">{n}</span>)}
-              </div>
+              ))}
             </div>
-            {/* Quarq */}
-            <div className="rounded-2xl p-8 border border-[#4F6EF7]/30 bg-[#4F6EF7]/5 glow-blue">
-              <div className="text-[#4F6EF7] text-xs font-semibold uppercase tracking-widest mb-4">Quarq — Weight-based learning</div>
-              <ul className="space-y-3 mb-6">
-                {['Internalizes your patterns into model weights', "Doesn't read about you. Knows you.", 'Improves over every interaction', 'Presence at the core'].map((t, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-white/80 text-sm">
-                    <span className="text-[#4F6EF7] mt-0.5">✓</span>{t}
-                  </li>
-                ))}
-              </ul>
-              <blockquote className="border-t border-[#4F6EF7]/20 pt-4 text-white/40 text-xs italic">
-                "Letta builds smarter notes. Quarq builds genuine memory."
-              </blockquote>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' as const }}>
+              <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: 'var(--red-dim)', color: 'var(--red)' }}>ChatGPT</span>
+              <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: 'var(--red-dim)', color: 'var(--red)' }}>Claude</span>
+              <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: 'var(--red-dim)', color: 'var(--red)' }}>Gemini</span>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* SECTION 6: WHY NOW */}
-      <section className="py-28 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">The timing is right.</h2>
-            <p className="text-white/40 text-lg">Three converging shifts make Quarq possible today.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { num: '1M', label: 'Context windows hit 1M tokens', desc: 'Long enough to hold everything in a session. Perfect for flushing to weight training after.' },
-              { num: '7B', label: 'SLMs are small enough for on-device', desc: '7B parameter models run on modern phones. Your AI, your device, your data.' },
-              { num: '∞', label: 'Continual learning is solvable', desc: 'LoRA adapter versioning, EWC, experience replay — the research is catching up to the vision.' },
-            ].map((c, i) => (
-              <div key={i} className="glass rounded-2xl p-8 text-center hover:border-white/15 transition-all">
-                <div className="text-5xl font-bold text-[#4F6EF7] mb-4 font-[var(--font-playfair)]">{c.num}</div>
-                <h3 className="font-semibold mb-3 text-base">{c.label}</h3>
-                <p className="text-white/40 text-sm leading-relaxed">{c.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 7: ALWAYS ON */}
-      <section className="py-28 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-3">Your AI should be there when you need it.</h2>
-            <p className="text-[#F59E0B]/80 text-xl font-medium">Not when you open an app.</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              { icon: <Mic size={22} />, title: 'Always Listening', desc: 'Push-to-talk. "Quarq, did you hear that?" — your AI is in the room with you.', color: '#4F6EF7' },
-              { icon: <Eye size={22} />, title: 'Always Watching', desc: 'Visual context via wearables. "Quarq, did you see that?" — see what you see.', color: '#6B7EF7' },
-              { icon: <Layers size={22} />, title: 'Cross-Modal', desc: 'Voice, vision, text — unified. One agent, every modality.', color: '#F59E0B' },
-              { icon: <GitBranch size={22} />, title: 'Cross-Session', desc: 'Your Telegram, your meetings, your code reviews — one continuous context.', color: '#F59E0B' },
-            ].map((f, i) => (
-              <div key={i} className="glass rounded-2xl p-8 hover:border-white/15 transition-all group">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-colors" style={{ background: f.color + '15', color: f.color }}>{f.icon}</div>
-                <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
-                <p className="text-white/45 text-sm leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 8: FOUNDER */}
-      <section id="team" className="py-28 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-16">Built by someone who ships.</h2>
-          <div className="glass rounded-2xl p-10 glow-blue text-left flex flex-col sm:flex-row gap-8 items-start">
-            <div className="w-16 h-16 rounded-2xl bg-[#4F6EF7]/20 flex items-center justify-center text-[#4F6EF7] font-bold text-2xl font-[var(--font-playfair)] flex-shrink-0">VK</div>
-            <div>
-              <div className="font-bold text-xl mb-1">Vaibhav Khanna</div>
-              <div className="text-[#4F6EF7] text-sm mb-4">Founder, Quarq</div>
-              <p className="text-white/55 text-sm leading-relaxed mb-6">
-                Built BlockFlow at IIT Roorkee. Wrote smart contracts handling billions in TVL.
-                Acquired by Fluid/InstaDapp at 23. Now building the personal AI I always wanted.
-              </p>
-              <div className="flex items-center gap-4">
-                <a href="https://x.com/0xvk__" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-white/40 hover:text-white text-sm transition-colors">
-                  <X size={15} /> @0xvk__
-                </a>
-              </div>
+          {/* Quarq */}
+          <div className="comparison-card-right">
+            <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'var(--accent)', marginBottom: '24px' }}>
+              Quarq
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+              {[
+                'Behavioral fingerprint in weights',
+                'Continuous learning loop',
+                'Persistent across all sessions',
+                'Unique model per person',
+              ].map((item) => (
+                <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ color: 'var(--accent)', fontSize: '14px' }}>✓</span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{item}</span>
+                </div>
+              ))}
             </div>
+            <p style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-faint)', lineHeight: '1.6' }}>
+              &ldquo;It doesn&apos;t remember you. It knows you.&rdquo;
+            </p>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* SECTION 9: WAITLIST CTA */}
-      <section id="waitlist" className="py-28 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="glass rounded-3xl p-12 border-[#4F6EF7]/20 glow-blue">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Be part of what's coming.</h2>
-            <p className="text-white/40 text-lg mb-8">Early access. Invite only. Builders first.</p>
-            <WaitlistForm variant="cta" />
-            <p className="text-white/25 text-sm mt-5">Join founders, engineers, and researchers building the future with presence AI.</p>
+      {/* ─── WHY NOW ─── */}
+      <Section id="why-quarq">
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <p className="section-label">Why now</p>
+          <h2 className="section-title">The inflection point.</h2>
+          <p className="section-sub">
+            Three converging breakthroughs make personal AI runtimes possible for the first time.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          <div className="card" style={{ textAlign: 'center' }}>
+            <p className="big-number">01</p>
+            <h3 className="card-title">Efficient Fine-Tuning</h3>
+            <p className="card-text">
+              LoRA and QLoRA make it possible to personalize models at a fraction of the cost.
+              What took millions now takes hundreds.
+            </p>
+          </div>
+          <div className="card" style={{ textAlign: 'center' }}>
+            <p className="big-number">02</p>
+            <h3 className="card-title">Edge Inference</h3>
+            <p className="card-text">
+              On-device and edge compute means your personal model can run close to you — fast,
+              private, and always available.
+            </p>
+          </div>
+          <div className="card" style={{ textAlign: 'center' }}>
+            <p className="big-number">03</p>
+            <h3 className="card-title">Behavioral Science</h3>
+            <p className="card-text">
+              New research in behavioral modeling and preference learning gives us the tools
+              to capture and encode human patterns.
+            </p>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* SECTION 10: FOOTER */}
-      <footer className="border-t border-white/5 py-10 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* ─── ALWAYS ON ─── */}
+      <Section>
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <p className="section-label" style={{ color: 'var(--amber)' }}>Always on</p>
+          <h2 className="section-title">Your AI is always running.</h2>
+          <p className="section-sub" style={{ color: 'var(--amber)' }}>
+            Not when you open an app.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          <div className="card">
+            <CardIcon amber><Radio size={20} /></CardIcon>
+            <h3 className="card-title">Persistent Runtime</h3>
+            <p className="card-text">
+              Quarq runs in the background, continuously processing and learning.
+              No cold starts, no context loading, no warmup time.
+            </p>
+          </div>
+          <div className="card">
+            <CardIcon amber><Eye size={20} /></CardIcon>
+            <h3 className="card-title">Ambient Awareness</h3>
+            <p className="card-text">
+              It observes patterns across your digital life — how you write, what you prioritize,
+              when you&apos;re focused vs. scattered.
+            </p>
+          </div>
+          <div className="card">
+            <CardIcon amber><Shield size={20} /></CardIcon>
+            <h3 className="card-title">Privacy-First</h3>
+            <p className="card-text">
+              Your model is yours. Your data trains only your instance.
+              No shared weights, no collective learning, no data leaving your runtime.
+            </p>
+          </div>
+          <div className="card">
+            <CardIcon amber><Wifi size={20} /></CardIcon>
+            <h3 className="card-title">Cross-Platform</h3>
+            <p className="card-text">
+              One model, every surface. Desktop, mobile, voice — your Quarq
+              is the same presence everywhere.
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── FOUNDER ─── */}
+      <Section id="team">
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <p className="section-label">Team</p>
+          <h2 className="section-title">Built by builders.</h2>
+        </div>
+        <div className="card" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="avatar-placeholder">VK</div>
+          </div>
+          <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}>Vaibhav</h3>
+          <p style={{ fontSize: '14px', color: 'var(--accent)', marginBottom: '16px', fontWeight: 500 }}>Founder</p>
+          <p className="card-text" style={{ maxWidth: '440px', margin: '0 auto 20px', textAlign: 'center' }}>
+            Ex-IIT Roorkee. Built and sold a crypto infrastructure company.
+            Shipped smart contracts handling billions in DeFi. Now building the future of personal AI.
+          </p>
+          <a
+            href="https://x.com/0xvk__"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none', transition: 'color 0.2s' }}
+          >
+            @0xvk__ on X →
+          </a>
+        </div>
+      </Section>
+
+      {/* ─── BOTTOM CTA ─── */}
+      <Section>
+        <div className="card glow" style={{ maxWidth: '560px', margin: '0 auto', textAlign: 'center', padding: '48px 40px' }}>
+          <h2 className="section-title" style={{ fontSize: '32px', marginBottom: '12px' }}>
+            Be first to experience Quarq.
+          </h2>
+          <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '32px' }}>
+            We&apos;re building something fundamentally different. Join the waitlist
+            for early access to your personal AI runtime.
+          </p>
+          <form className="email-form" onSubmit={(e) => e.preventDefault()}>
+            <input type="email" placeholder="you@email.com" className="email-input" />
+            <button type="submit" className="email-btn">Get Early Access</button>
+          </form>
+          <p className="micro-copy">Limited spots. Launching Q3 2026.</p>
+        </div>
+      </Section>
+
+      {/* ─── FOOTER ─── */}
+      <footer className="footer">
+        <div className="footer-inner">
           <div>
-            <div className="text-[#4F6EF7] font-bold text-lg mb-1">Quarq</div>
-            <p className="text-white/25 text-xs">Every AI today is a session. Quarq is a presence.</p>
+            <p style={{ fontWeight: 700, color: 'var(--accent)', marginBottom: '4px', fontSize: '16px' }}>Quarq</p>
+            <p style={{ fontSize: '13px', color: 'var(--text-faint)' }}>AI that knows you.</p>
           </div>
-          <div className="flex items-center gap-6 text-white/30 text-sm">
-            <a href="https://x.com/0xvk__" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1.5"><X size={14} /> Twitter</a>
-            <a href="https://github.com/vk-agent-labs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1.5"><Github size={14} /> GitHub</a>
-            <span className="text-white/15">© 2026 Quarq. All rights reserved.</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+            <a href="https://x.com/0xvk__" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
+              Twitter
+            </a>
+            <a href="https://github.com/vk-agent-labs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
+              GitHub
+            </a>
+            <span style={{ fontSize: '13px', color: 'var(--text-faint)' }}>
+              © 2026 Quarq
+            </span>
           </div>
         </div>
       </footer>
-    </main>
+    </>
   )
 }
