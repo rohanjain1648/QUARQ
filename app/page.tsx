@@ -347,7 +347,7 @@ export default function Home() {
       <Section id="why-quarq">
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <p className="section-label">Why Quarq</p>
-          <h2 className="section-title">Memory vs. Knowing.</h2>
+          <h2 className="section-title">Memory vs. Continual Learning.</h2>
           <p className="section-sub">
             Every AI assistant today resets when you close the tab. They store notes.
             They retrieve fragments. They don&apos;t grow. Quarq is built differently, from the ground up, for continuity.
