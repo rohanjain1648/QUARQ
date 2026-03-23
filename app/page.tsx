@@ -186,8 +186,7 @@ export default function Home() {
             Quarq is a presence.
           </h2>
           <p className="hero-subtitle">
-            An always-on AI runtime that learns who you are — not from notes,
-            but from its weights. Your behavioral fingerprint, baked into the model.
+            The AI that actually grows with you.
           </p>
           <div id="waitlist"><WaitlistForm btnLabel="Join Waitlist" /></div>
           <p className="micro-copy">No spam. Early access only.</p>
@@ -295,11 +294,101 @@ export default function Home() {
         </p>
       </Section>
 
+      {/* ─── MEMORY STACK VISUAL ─── */}
+      <Section id="memory-stack">
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <p className="section-label">Architecture</p>
+          <h2 className="section-title">The Quarq Memory Stack</h2>
+          <p className="section-sub">Three layers. Each optimized for what it does best. One unified presence.</p>
+        </div>
+        <div style={{ maxWidth: '640px', margin: '0 auto', position: 'relative' }}>
+          {/* Layer 3 — Context (top) */}
+          <div style={{
+            background: 'rgba(91,127,255,0.06)',
+            border: '1px solid rgba(91,127,255,0.2)',
+            borderRadius: '16px',
+            padding: '28px 32px',
+            marginBottom: '0',
+            position: 'relative',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
+                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 3 — Context Window</span>
+              </div>
+              <span className="tag">Real-time</span>
+            </div>
+            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Working Memory</p>
+            <p className="card-text">Active session, current task, routing index. Small, fast, purposeful. Cleared and rebuilt each session.</p>
+          </div>
+
+          {/* Arrow down */}
+          <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', padding: '12px 0' }}>
+            <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, rgba(91,127,255,0.4), rgba(91,127,255,0.1))' }} />
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="rgba(91,127,255,0.4)"/></svg>
+          </div>
+
+          {/* Layer 2 — Memory DB (middle) */}
+          <div style={{
+            background: 'rgba(91,127,255,0.04)',
+            border: '1px solid rgba(91,127,255,0.15)',
+            borderRadius: '16px',
+            padding: '28px 32px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(91,127,255,0.7)' }} />
+                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(91,127,255,0.7)' }}>Layer 2 — Memory Database</span>
+              </div>
+              <span className="tag">Semantic graph</span>
+            </div>
+            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Knowledge Layer</p>
+            <p className="card-text">Facts, events, relationships, documents. Fast tier for recent access. Slow tier for deep history. Structured and searchable.</p>
+          </div>
+
+          {/* Arrow down */}
+          <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', padding: '12px 0' }}>
+            <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, rgba(91,127,255,0.4), rgba(91,127,255,0.1))' }} />
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="rgba(91,127,255,0.4)"/></svg>
+          </div>
+
+          {/* Layer 1 — Weights (foundation) */}
+          <div style={{
+            background: 'rgba(91,127,255,0.08)',
+            border: '1px solid rgba(91,127,255,0.3)',
+            borderRadius: '16px',
+            padding: '28px 32px',
+            boxShadow: '0 0 40px rgba(91,127,255,0.08)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 12px var(--accent)', animation: 'pulse-slow 3s ease-in-out infinite' }} />
+                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 1 — Model Weights (SLM)</span>
+              </div>
+              <span className="tag">Continual LoRA</span>
+            </div>
+            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Behavioral Layer — The Foundation</p>
+            <p className="card-text">Your communication style, decision patterns, implicit preferences — baked into the model itself. No retrieval. No prompting. The model <em>is</em> this way because of you.</p>
+            <p style={{ marginTop: '16px', fontSize: '13px', color: 'var(--accent)', fontWeight: 500 }}>
+              ← This is what others don&apos;t have. Letta injects context. Quarq changes the weights.
+            </p>
+          </div>
+
+          <p style={{ textAlign: 'center', fontStyle: 'italic', color: 'var(--text-faint)', marginTop: '32px', fontSize: '14px' }}>
+            The SLM knows what&apos;s stored where — and routes between all three.
+          </p>
+        </div>
+      </Section>
+
       {/* ─── COMPARISON ─── */}
       <Section>
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <p className="section-label">Comparison</p>
           <h2 className="section-title">Memory vs. Knowing.</h2>
+          <p style={{ fontSize: '22px', fontWeight: 600, color: 'var(--text)', marginTop: '24px', lineHeight: 1.4 }}>
+            Letta reads your history.<br />
+            <span style={{ color: 'var(--accent)' }}>Quarq becomes your history.</span>
+          </p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
           {/* Others */}
@@ -364,26 +453,29 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
           <div className="card" style={{ textAlign: 'center' }}>
             <p className="big-number">01</p>
-            <h3 className="card-title">Efficient Fine-Tuning</h3>
+            <h3 className="card-title">LoRA makes personalization cheap</h3>
             <p className="card-text">
-              LoRA and QLoRA make it possible to personalize models at a fraction of the cost.
-              What took millions now takes hundreds.
+              Continual fine-tuning with LoRA adapters costs cents per update, not millions.
+              Tencent + Tsinghua&apos;s CALM paper (2025) shows next-vector prediction cuts inference
+              cost further — making always-on personal models economically viable for the first time.
             </p>
           </div>
           <div className="card" style={{ textAlign: 'center' }}>
             <p className="big-number">02</p>
-            <h3 className="card-title">Edge Inference</h3>
+            <h3 className="card-title">7B models run on your phone</h3>
             <p className="card-text">
-              On-device and edge compute means your personal model can run close to you — fast,
-              private, and always available.
+              Apple&apos;s A18 Pro, Qualcomm Snapdragon X, Google&apos;s Gemini Nano — flagship devices
+              now run 7B parameter models natively. NVIDIA&apos;s Project DIGITS puts 200B models
+              on a desktop. Your personal AI can live on your device, not a cloud you don&apos;t control.
             </p>
           </div>
           <div className="card" style={{ textAlign: 'center' }}>
             <p className="big-number">03</p>
-            <h3 className="card-title">Behavioral Science</h3>
+            <h3 className="card-title">Context windows hit 1M tokens</h3>
             <p className="card-text">
-              New research in behavioral modeling and preference learning gives us the tools
-              to capture and encode human patterns.
+              Gemini 1.5 Pro, Claude, GPT-4 — context windows are now large enough to hold
+              entire conversations as training signal. Long sessions flush directly into weight
+              updates. The infrastructure for continual learning exists today.
             </p>
           </div>
         </div>
