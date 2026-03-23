@@ -135,21 +135,7 @@ function Nav() {
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-inner">
-        <a href="#" className="nav-logo">
-          <img
-            src="/quarq-logo.jpg"
-            alt="Quarq"
-            draggable={false}
-            style={{
-              height: '36px',
-              width: 'auto',
-              objectFit: 'contain',
-              display: 'block',
-              mixBlendMode: 'screen',
-              pointerEvents: 'none',
-              userSelect: 'none',
-            }}
-          />
+        <a href="#" className="nav-logo">Quarq
         </a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
@@ -480,21 +466,7 @@ export default function Home() {
       <footer className="footer">
         <div className="footer-inner">
           <div>
-            <img
-              src="/quarq-logo.jpg"
-              alt="Quarq"
-              draggable={false}
-              style={{
-                height: '28px',
-                width: 'auto',
-                objectFit: 'contain',
-                display: 'block',
-                marginBottom: '4px',
-                mixBlendMode: 'screen',
-                pointerEvents: 'none',
-                userSelect: 'none',
-              }}
-            />
+            <span style={{ fontWeight: 600, color: "white", fontSize: "18px", display: "block", marginBottom: "4px", letterSpacing: "-0.02em" }}>Quarq</span>
             <p style={{ fontSize: '13px', color: 'var(--text-faint)' }}>AI that knows you.</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
