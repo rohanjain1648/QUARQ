@@ -48,7 +48,7 @@ function WaitlistForm({ btnLabel = 'Join Waitlist' }: { btnLabel?: string }) {
     </form>
   )
 }
-import { RefreshCw, FileText, Unlink, Brain, Layers, Fingerprint, Zap, Shield, Globe, Clock, Eye, Wifi, Radio } from 'lucide-react'
+import { RefreshCw, FileText, Unlink, Brain, Layers, Fingerprint, Zap, Globe, Clock, Eye, Wifi, Radio } from 'lucide-react'
 
 /* ─── Particle Canvas ─── */
 function ParticleCanvas() {
@@ -138,8 +138,6 @@ function Nav() {
         <a href="#" className="nav-logo">Quarq</a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
-          <a href="#why-quarq">Why Quarq</a>
-
         </div>
         <a href="#waitlist" className="nav-cta">Join Waitlist</a>
       </div>
@@ -280,7 +278,7 @@ export default function Home() {
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
               <span className="tag">Step 3</span>
-              <h3 className="card-title" style={{ marginBottom: 0 }}>Personal Runtime</h3>
+              <h3 className="card-title" style={{ marginBottom: 0 }}>Personal AI Assistant</h3>
             </div>
             <p className="card-text">
               Your Quarq instance runs continuously — always learning, always adapting.
@@ -409,11 +407,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' as const }}>
-              <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: 'var(--red-dim)', color: 'var(--red)' }}>ChatGPT</span>
-              <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: 'var(--red-dim)', color: 'var(--red)' }}>Claude</span>
-              <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: 'var(--red-dim)', color: 'var(--red)' }}>Gemini</span>
-            </div>
+            <p style={{ fontSize: '12px', color: 'var(--text-faint)', fontStyle: 'italic' }}>Today&apos;s AI assistants</p>
           </div>
 
           {/* Quarq */}
@@ -436,46 +430,6 @@ export default function Home() {
             </div>
             <p style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-faint)', lineHeight: '1.6' }}>
               &ldquo;It doesn&apos;t remember you. It knows you.&rdquo;
-            </p>
-          </div>
-        </div>
-      </Section>
-
-      {/* ─── WHY NOW ─── */}
-      <Section id="why-quarq">
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <p className="section-label">Why now</p>
-          <h2 className="section-title">The inflection point.</h2>
-          <p className="section-sub">
-            Three converging breakthroughs make personal AI runtimes possible for the first time.
-          </p>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <p className="big-number">01</p>
-            <h3 className="card-title">LoRA makes personalization cheap</h3>
-            <p className="card-text">
-              Continual fine-tuning with LoRA adapters costs cents per update, not millions.
-              Tencent + Tsinghua&apos;s CALM paper (2025) shows next-vector prediction cuts inference
-              cost further — making always-on personal models economically viable for the first time.
-            </p>
-          </div>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <p className="big-number">02</p>
-            <h3 className="card-title">7B models run on your phone</h3>
-            <p className="card-text">
-              Apple&apos;s A18 Pro, Qualcomm Snapdragon X, Google&apos;s Gemini Nano — flagship devices
-              now run 7B parameter models natively. NVIDIA&apos;s Project DIGITS puts 200B models
-              on a desktop. Your personal AI can live on your device, not a cloud you don&apos;t control.
-            </p>
-          </div>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <p className="big-number">03</p>
-            <h3 className="card-title">Context windows hit 1M tokens</h3>
-            <p className="card-text">
-              Gemini 1.5 Pro, Claude, GPT-4 — context windows are now large enough to hold
-              entire conversations as training signal. Long sessions flush directly into weight
-              updates. The infrastructure for continual learning exists today.
             </p>
           </div>
         </div>
@@ -508,14 +462,6 @@ export default function Home() {
             </p>
           </div>
           <div className="card">
-            <CardIcon amber><Shield size={20} /></CardIcon>
-            <h3 className="card-title">Privacy-First</h3>
-            <p className="card-text">
-              Your model is yours. Your data trains only your instance.
-              No shared weights, no collective learning, no data leaving your runtime.
-            </p>
-          </div>
-          <div className="card">
             <CardIcon amber><Wifi size={20} /></CardIcon>
             <h3 className="card-title">Cross-Platform</h3>
             <p className="card-text">
@@ -537,10 +483,10 @@ export default function Home() {
           </h2>
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '32px' }}>
             We&apos;re building something fundamentally different. Join the waitlist
-            for early access to your personal AI runtime.
+            for early access to your personal AI assistant.
           </p>
           <WaitlistForm btnLabel="Get Early Access" />
-          <p className="micro-copy">Limited spots. Launching Q3 2026.</p>
+          <p className="micro-copy">Limited spots. No spam.</p>
         </div>
       </Section>
 

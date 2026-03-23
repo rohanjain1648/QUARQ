@@ -7,10 +7,10 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfa
 
 export const metadata: Metadata = {
   title: 'Quarq — Every AI today is a session. Quarq is a presence.',
-  description: 'An always-on personal AI runtime that learns who you are — not from notes, but from its weights. Your behavioral fingerprint, baked into the model itself.',
+  description: 'An always-on personal AI assistant that learns who you are — not from notes, but from its weights. Your behavioral fingerprint, baked into the model itself.',
   openGraph: {
     title: 'Quarq — Every AI today is a session. Quarq is a presence.',
-    description: 'An always-on personal AI runtime that learns who you are.',
+    description: 'An always-on personal AI assistant that learns who you are.',
     type: 'website',
     url: 'https://quarq.io',
   },
