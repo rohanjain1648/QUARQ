@@ -188,7 +188,7 @@ export default function Home() {
           <p className="hero-subtitle">
             The AI that actually grows with you.
           </p>
-          <div id="waitlist"><WaitlistForm btnLabel="Join Waitlist" /></div>
+          <div id="waitlist" style={{ scrollMarginTop: '80px' }}><WaitlistForm btnLabel="Join Waitlist" /></div>
           <p className="micro-copy">No spam. Early access only.</p>
         </div>
       </div>
