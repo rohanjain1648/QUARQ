@@ -23,13 +23,13 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   icons: {
     icon: [
-      { url: '/quarq-mark-32.png?v=2', sizes: '32x32', type: 'image/png' },
-      { url: '/quarq-mark.png?v=2', type: 'image/png' },
+      { url: '/quarq-mark-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/quarq-mark.png', type: 'image/png' },
     ],
     apple: [
-      { url: '/quarq-mark-512.png?v=2', sizes: '512x512', type: 'image/png' },
+      { url: '/quarq-mark-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    shortcut: '/quarq-mark-32.png?v=2',
+    shortcut: '/quarq-mark-32.png',
   },
 }
 
