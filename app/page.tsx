@@ -128,7 +128,7 @@ function Nav() {
     <nav className="nav">
       <div className="nav-pill">
         <a href="#" className="nav-logo">
-          <img src="/quarq-logo.jpg" alt="Quarq" style={{ height: '28px', width: 'auto', objectFit: 'contain', display: 'block', borderRadius: '4px' }} />
+          Quarq
         </a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
