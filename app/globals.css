@@ -265,7 +265,7 @@ body {
 }
 .hero-title {
   font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
-  font-size: clamp(42px, 6.5vw, 72px);
+  font-size: clamp(32px, 5vw, 58px);
   line-height: 1.1;
   letter-spacing: -0.03em;
   margin-bottom: 8px;

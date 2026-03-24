@@ -172,7 +172,7 @@ export default function Home() {
         <div className="hero-gradient" />
         <div className="hero-content">
           <div className="hero-badge">Coming soon · Private beta</div>
-          <h1 className="hero-title gradient-text">
+          <h1 className="hero-title gradient-text" style={{ whiteSpace: 'nowrap' }}>
             Every AI today is a session.
           </h1>
           <h2 className="hero-title gradient-text" style={{ marginBottom: '24px' }}>
