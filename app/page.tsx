@@ -325,9 +325,7 @@ export default function Home() {
             </div>
             <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px', letterSpacing: '-0.02em' }}>Behavioral Layer: The Foundation</p>
             <p className="card-text">Your communication style, decision patterns, and implicit preferences, baked into the model itself. No retrieval. No prompting. The model <em>is</em> this way because of you.</p>
-            <p style={{ marginTop: '16px', fontSize: '13px', color: '#8a7460', fontWeight: 500 }}>
-              ← Others only inject context. Quarq optimizes all three layers, routing between them intelligently.
-            </p>
+
           </div>
 
           <p style={{ textAlign: 'center', fontStyle: 'italic', color: 'var(--text-faint)', marginTop: '32px', fontSize: '14px' }}>
