@@ -128,7 +128,7 @@ function Nav() {
     <nav className="nav">
       <div className="nav-pill">
         <a href="#" className="nav-logo">
-          Quarq
+          <img src="/quarq-logo.svg" alt="Quarq" style={{ height: '28px', width: 'auto', display: 'block' }} />
         </a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
@@ -457,7 +457,7 @@ export default function Home() {
       <footer className="footer">
         <div className="footer-inner">
           <div>
-            <span style={{ fontWeight: 600, color: "var(--text)", fontSize: "16px", display: "block", marginBottom: "4px", letterSpacing: "-0.02em" }}>Quarq</span>
+            <img src="/quarq-logo.svg" alt="Quarq" style={{ height: '24px', width: 'auto', display: 'block', marginBottom: '6px' }} />
             <p style={{ fontSize: '13px', color: 'var(--text-faint)' }}>AI that knows you.</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
