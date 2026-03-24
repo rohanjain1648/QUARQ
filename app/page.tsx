@@ -77,7 +77,7 @@ function ParticleCanvas() {
         vx: (Math.random() - 0.5) * 0.4,
         vy: (Math.random() - 0.5) * 0.4,
         r: Math.random() * 1.5 + 0.5,
-        o: Math.random() * 0.4 + 0.1,
+        o: Math.random() * 0.04 + 0.01,
       })
     }
 
@@ -103,7 +103,7 @@ function ParticleCanvas() {
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(41,41,41,${0.04 * (1 - dist / 150)})`
+            ctx.strokeStyle = `rgba(41,41,41,${0.02 * (1 - dist / 150)})`
             ctx.lineWidth = 0.5
             ctx.stroke()
           }
@@ -188,9 +188,9 @@ export default function Home() {
 
       {/* ─── HOW IT WORKS ─── */}
       <Section id="how-it-works">
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <p className="section-label">How it works</p>
-          <h2 className="section-title">Three layers of continual learning.</h2>
+          <h2 className="section-title gradient-text">Three layers of continual learning.</h2>
           <p className="section-sub">
             Quarq doesn&apos;t use one memory approach. It uses all three. Different patterns belong in
             different places. Quarq routes between them automatically, because it knows you.
@@ -252,9 +252,9 @@ export default function Home() {
 
       {/* ─── MEMORY STACK VISUAL ─── */}
       <Section id="memory-stack">
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <p className="section-label">Architecture</p>
-          <h2 className="section-title">The Quarq Memory Stack</h2>
+          <h2 className="section-title gradient-text">The Quarq Memory Stack</h2>
           <p className="section-sub">Three layers. Each optimized for what it does best. One unified presence.</p>
         </div>
         <div style={{ maxWidth: '640px', margin: '0 auto', position: 'relative' }}>
@@ -338,9 +338,9 @@ export default function Home() {
 
       {/* ─── COMPARISON ─── */}
       <Section id="why-quarq">
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <p className="section-label">Why Quarq</p>
-          <h2 className="section-title">Memory vs. Continual Learning.</h2>
+          <h2 className="section-title gradient-text">Memory vs. Continual Learning.</h2>
           <p className="section-sub">
             Every AI assistant today resets when you close the tab. They store notes.
             They retrieve fragments. They don&apos;t grow. Quarq is built differently, from the ground up, for continuity.
@@ -402,9 +402,9 @@ export default function Home() {
 
       {/* ─── ALWAYS ON ─── */}
       <Section>
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <p className="section-label">Always on</p>
-          <h2 className="section-title">Your AI is always running.</h2>
+          <h2 className="section-title gradient-text">Your AI is always running.</h2>
           <p className="section-sub">
             Not when you open an app.
           </p>
@@ -441,9 +441,9 @@ export default function Home() {
 
 
       {/* ─── BOTTOM CTA ─── */}
-      <Section>
+      <Section className="section-cta">
         <div className="card glow" style={{ maxWidth: '560px', margin: '0 auto', textAlign: 'center', padding: '48px 40px' }}>
-          <h2 className="section-title" style={{ fontSize: '32px', marginBottom: '12px' }}>
+          <h2 className="section-title gradient-text" style={{ fontSize: '32px', marginBottom: '12px' }}>
             Be first to experience Quarq.
           </h2>
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '32px' }}>

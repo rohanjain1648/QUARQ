@@ -340,7 +340,7 @@ body {
 /* ─── Connector ─── */
 .connector {
   width: 1px;
-  height: 32px;
+  height: 8px;
   background: var(--border);
   margin: 0 auto;
 }
