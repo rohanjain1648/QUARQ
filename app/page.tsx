@@ -27,7 +27,7 @@ function WaitlistForm({ btnLabel = 'Join Waitlist' }: { btnLabel?: string }) {
   }
 
   if (status === 'done') return (
-    <p style={{ color: 'var(--accent)', fontSize: '15px', fontWeight: 500, padding: '16px 0' }}>✓ {msg}</p>
+    <p style={{ color: '#5a8a5a', fontSize: '15px', fontWeight: 500, padding: '16px 0' }}>✓ {msg}</p>
   )
 
   return (
@@ -90,7 +90,7 @@ function ParticleCanvas() {
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(91,127,255,${p.o})`
+        ctx.fillStyle = `rgba(41,41,41,${p.o * 0.4})`
         ctx.fill()
       })
       // Draw connections
@@ -103,7 +103,7 @@ function ParticleCanvas() {
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(91,127,255,${0.06 * (1 - dist / 150)})`
+            ctx.strokeStyle = `rgba(41,41,41,${0.04 * (1 - dist / 150)})`
             ctx.lineWidth = 0.5
             ctx.stroke()
           }
@@ -124,18 +124,11 @@ function ParticleCanvas() {
 
 /* ─── Nav ─── */
 function Nav() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
-    <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-inner">
-        <a href="#" className="nav-logo">Quarq
+    <nav className="nav">
+      <div className="nav-pill">
+        <a href="#" className="nav-logo">
+          <img src="/quarq-logo.jpg" alt="Quarq" style={{ height: '28px', width: 'auto', objectFit: 'contain', display: 'block', borderRadius: '4px' }} />
         </a>
         <div className="nav-links">
           <a href="#how-it-works">How it works</a>
@@ -179,10 +172,10 @@ export default function Home() {
         <div className="hero-gradient" />
         <div className="hero-content">
           <div className="hero-badge">Coming soon · Private beta</div>
-          <h1 className="hero-title" style={{ color: 'var(--text)' }}>
+          <h1 className="hero-title gradient-text">
             Every AI today is a session.
           </h1>
-          <h2 className="hero-title" style={{ color: 'var(--accent)', marginBottom: '24px' }}>
+          <h2 className="hero-title gradient-text" style={{ marginBottom: '24px' }}>
             Quarq is a presence.
           </h2>
           <p className="hero-subtitle">
@@ -267,8 +260,8 @@ export default function Home() {
         <div style={{ maxWidth: '640px', margin: '0 auto', position: 'relative' }}>
           {/* Layer 3: Context (top) */}
           <div style={{
-            background: 'rgba(91,127,255,0.06)',
-            border: '1px solid rgba(91,127,255,0.2)',
+            background: 'var(--card-bg)',
+            border: '1px solid var(--border)',
             borderRadius: '16px',
             padding: '28px 32px',
             marginBottom: '0',
@@ -276,63 +269,63 @@ export default function Home() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
-                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 3: Context Window</span>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#a0a0a0' }} />
+                <span style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'var(--text-muted)' }}>Layer 3: Context Window</span>
               </div>
               <span className="tag">Real-time</span>
             </div>
-            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Working Memory</p>
+            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px', letterSpacing: '-0.02em' }}>Working Memory</p>
             <p className="card-text">Active session, current task, routing index. Small, fast, purposeful. Cleared and rebuilt each session.</p>
           </div>
 
           {/* Arrow down */}
           <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', padding: '12px 0' }}>
-            <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, rgba(91,127,255,0.4), rgba(91,127,255,0.1))' }} />
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="rgba(91,127,255,0.4)"/></svg>
+            <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, var(--border), transparent)' }} />
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="var(--text-faint)"/></svg>
           </div>
 
           {/* Layer 2: Memory DB (middle) */}
           <div style={{
-            background: 'rgba(91,127,255,0.04)',
-            border: '1px solid rgba(91,127,255,0.15)',
+            background: 'var(--card-bg)',
+            border: '1px solid var(--border)',
             borderRadius: '16px',
             padding: '28px 32px',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(91,127,255,0.7)' }} />
-                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(91,127,255,0.7)' }}>Layer 2: Memory Database</span>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#909090' }} />
+                <span style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'var(--text-muted)' }}>Layer 2: Memory Database</span>
               </div>
               <span className="tag">Semantic graph</span>
             </div>
-            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Knowledge Layer</p>
+            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px', letterSpacing: '-0.02em' }}>Knowledge Layer</p>
             <p className="card-text">Facts, events, relationships, documents. Fast tier for recent access. Slow tier for deep history. Structured and searchable.</p>
           </div>
 
           {/* Arrow down */}
           <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', padding: '12px 0' }}>
-            <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, rgba(91,127,255,0.4), rgba(91,127,255,0.1))' }} />
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="rgba(91,127,255,0.4)"/></svg>
+            <div style={{ width: '1px', height: '20px', background: 'linear-gradient(to bottom, var(--border), transparent)' }} />
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M5 6L0 0h10L5 6z" fill="var(--text-faint)"/></svg>
           </div>
 
           {/* Layer 1: Weights (foundation) */}
           <div style={{
-            background: 'rgba(91,127,255,0.08)',
-            border: '1px solid rgba(91,127,255,0.3)',
+            background: 'var(--card-bg)',
+            border: '1px solid #d8d0c8',
             borderRadius: '16px',
             padding: '28px 32px',
-            boxShadow: '0 0 40px rgba(91,127,255,0.08)',
+            boxShadow: '0 0 40px rgba(201,190,176,0.12)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 12px var(--accent)', animation: 'pulse-slow 3s ease-in-out infinite' }} />
-                <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'var(--accent)' }}>Layer 1: Model Weights (SLM)</span>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#b8a89a', animation: 'pulse-slow 3s ease-in-out infinite' }} />
+                <span style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'var(--text-muted)' }}>Layer 1: Model Weights (SLM)</span>
               </div>
               <span className="tag">Continual LoRA</span>
             </div>
-            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px' }}>Behavioral Layer: The Foundation</p>
+            <p style={{ fontSize: '15px', fontWeight: 600, marginBottom: '6px', letterSpacing: '-0.02em' }}>Behavioral Layer: The Foundation</p>
             <p className="card-text">Your communication style, decision patterns, and implicit preferences, baked into the model itself. No retrieval. No prompting. The model <em>is</em> this way because of you.</p>
-            <p style={{ marginTop: '16px', fontSize: '13px', color: 'var(--accent)', fontWeight: 500 }}>
+            <p style={{ marginTop: '16px', fontSize: '13px', color: '#8a7460', fontWeight: 500 }}>
               ← Others only inject context. Quarq optimizes all three layers, routing between them intelligently.
             </p>
           </div>
@@ -360,7 +353,7 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
           {/* Others */}
           <div className="comparison-card-left">
-            <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'var(--red)', marginBottom: '24px' }}>
+            <p style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#b04040', marginBottom: '24px' }}>
               Today&apos;s AI Assistants
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -373,7 +366,7 @@ export default function Home() {
                 'Same model for everyone',
               ].map((item) => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ color: 'var(--red)', fontSize: '14px' }}>✗</span>
+                  <span style={{ color: '#b04040', fontSize: '14px' }}>✗</span>
                   <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{item}</span>
                 </div>
               ))}
@@ -382,7 +375,7 @@ export default function Home() {
 
           {/* Quarq */}
           <div className="comparison-card-right">
-            <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'var(--accent)', marginBottom: '24px' }}>
+            <p style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#8a7460', marginBottom: '24px' }}>
               Quarq
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -395,12 +388,12 @@ export default function Home() {
                 'Unique model per person',
               ].map((item) => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ color: 'var(--accent)', fontSize: '14px' }}>✓</span>
+                  <span style={{ color: '#8a7460', fontSize: '14px' }}>✓</span>
                   <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{item}</span>
                 </div>
               ))}
             </div>
-            <p style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-faint)', lineHeight: '1.6', marginTop: '24px' }}>
+            <p style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-faint)', lineHeight: '1.6', marginTop: '20px' }}>
               &ldquo;It doesn&apos;t remember you. It knows you.&rdquo;
             </p>
           </div>
@@ -410,9 +403,9 @@ export default function Home() {
       {/* ─── ALWAYS ON ─── */}
       <Section>
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <p className="section-label" style={{ color: 'var(--amber)' }}>Always on</p>
+          <p className="section-label">Always on</p>
           <h2 className="section-title">Your AI is always running.</h2>
-          <p className="section-sub" style={{ color: 'var(--amber)' }}>
+          <p className="section-sub">
             Not when you open an app.
           </p>
         </div>
@@ -466,14 +459,14 @@ export default function Home() {
       <footer className="footer">
         <div className="footer-inner">
           <div>
-            <span style={{ fontWeight: 600, color: "white", fontSize: "18px", display: "block", marginBottom: "4px", letterSpacing: "-0.02em" }}>Quarq</span>
+            <span style={{ fontWeight: 600, color: "var(--text)", fontSize: "16px", display: "block", marginBottom: "4px", letterSpacing: "-0.02em" }}>Quarq</span>
             <p style={{ fontSize: '13px', color: 'var(--text-faint)' }}>AI that knows you.</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <a href="https://x.com/QuarqLabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
+            <a href="https://x.com/QuarqLabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}>
               Twitter
             </a>
-            <a href="https://github.com/quarqlabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-faint)', textDecoration: 'none' }}>
+            <a href="https://github.com/quarqlabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}>
               GitHub
             </a>
             <span style={{ fontSize: '13px', color: 'var(--text-faint)' }}>
