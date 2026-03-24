@@ -462,7 +462,7 @@ export default function Home() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <a href="https://x.com/QuarqLabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}>
-              Twitter
+              X
             </a>
             <a href="https://github.com/quarqlabs" target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}>
               GitHub
