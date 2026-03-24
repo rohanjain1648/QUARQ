@@ -166,6 +166,21 @@ export default function Home() {
     <>
       <Nav />
 
+      {/* ─── JSON-LD ─── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          'name': 'Quarq',
+          'url': 'https://quarq.io',
+          'description': 'A personal AI that grows with you through continual learning and behavioral fingerprinting.',
+          'applicationCategory': 'AIApplication',
+          'operatingSystem': 'Web',
+          'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'USD' },
+        })}}
+      />
+
       {/* ─── HERO ─── */}
       <div className="hero">
         <ParticleCanvas />

@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://quarq.io/sitemap.xml
