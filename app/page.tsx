@@ -358,10 +358,7 @@ export default function Home() {
             Every AI assistant today resets when you close the tab. They store notes.
             They retrieve fragments. They don&apos;t grow. Quarq is built differently, from the ground up, for continuity.
           </p>
-          <p style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text)', marginTop: '32px', lineHeight: 1.5 }}>
-            Others read your history.<br />
-            <span style={{ color: 'var(--accent)' }}>Quarq becomes your history.</span>
-          </p>
+
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
           {/* Others */}
