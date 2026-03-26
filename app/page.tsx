@@ -373,7 +373,7 @@ export default function Home() {
                 'No relationship, only isolated sessions',
                 'DB based "memory"',
                 'Retrieval-based recall',
-                'Same model for everyone',
+                'A static server controls the runtime orchestration',
               ].map((item) => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ color: '#b04040', fontSize: '14px' }}>✗</span>
@@ -395,7 +395,7 @@ export default function Home() {
                 'A presence, not a session',
                 'Hybrid memory: weights + DB + context',
                 'Learns your patterns, not just your facts',
-                'Unique SLM per person',
+                'A dynamic SLM controls the runtime orchestration',
               ].map((item) => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ color: '#8a7460', fontSize: '14px' }}>✓</span>
