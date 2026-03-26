@@ -194,7 +194,7 @@ export default function Home() {
             Quarq is a presence.
           </h2>
           <p className="hero-subtitle">
-            The AI that actually grows with you.
+            AI agents that learn and evolve with you.
           </p>
           <div id="waitlist" style={{ scrollMarginTop: '80px' }}><WaitlistForm btnLabel="Join Waitlist" /></div>
           <p className="micro-copy">No spam. Early access only.</p>
