@@ -371,7 +371,7 @@ export default function Home() {
                 'Every session starts from zero',
                 'Memory is just stored text fragments',
                 'No relationship, only isolated sessions',
-                'Context window as "memory"',
+                'DB based "memory"',
                 'Retrieval-based recall',
                 'Same model for everyone',
               ].map((item) => (
