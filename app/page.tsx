@@ -449,7 +449,7 @@ export default function Home() {
 
       {/* ─── BOTTOM CTA ─── */}
       <Section className="section-cta">
-        <div className="card glow" style={{ maxWidth: '560px', margin: '0 auto', textAlign: 'center', padding: '48px 40px' }}>
+        <div className="card glow" style={{ maxWidth: '560px', margin: '0 auto', textAlign: 'center', padding: 'clamp(28px, 5vw, 48px) clamp(20px, 5vw, 40px)' }}>
           <h2 className="section-title gradient-text" style={{ fontSize: '32px', marginBottom: '12px' }}>
             Be first to experience Quarq.
           </h2>

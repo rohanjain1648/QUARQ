@@ -282,6 +282,7 @@ body {
 /* ─── Email form ─── */
 .email-form {
   display: flex;
+  width: 100%;
   max-width: 420px;
   margin: 0 auto 12px;
   gap: 8px;
@@ -388,14 +389,45 @@ body {
 
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
+  /* Layout */
   .section { padding: 56px 20px; }
-  .section-cta { padding: 40px 20px; }
-  .section-title { font-size: 30px; }
-  .hero-title { font-size: 46px; white-space: normal; }
-  .hero { padding: 120px 20px 60px; }
-  .nav { top: 12px; }
-  .nav-pill { min-width: unset; width: calc(100vw - 32px); }
+  .section-cta { padding: 40px 16px; }
+
+  /* Typography */
+  .section-title { font-size: 26px; letter-spacing: -0.03em; }
+  .section-sub { font-size: 14px; }
+
+  /* Hero — override inline whiteSpace:nowrap with !important */
+  .hero { padding: 100px 20px 60px; }
+  .hero-content { max-width: 100%; }
+  .hero-title { font-size: 30px !important; white-space: normal !important; line-height: 1.15 !important; }
+  .hero-subtitle { font-size: 15px; }
+  .hero-badge { font-size: 10px; margin-bottom: 24px; }
+
+  /* Nav */
+  .nav { top: 10px; left: 16px; right: 16px; transform: none; width: auto; }
+  .nav-pill { min-width: unset; width: 100%; padding: 6px 8px 6px 12px; }
   .nav-links { display: none; }
-  .email-form { flex-direction: column; }
-  .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+
+  /* Forms */
+  .email-form { flex-direction: column; gap: 10px; }
+  .email-input { width: 100%; }
+  .email-btn { width: 100%; padding: 13px 22px; text-align: center; }
+
+  /* Cards */
+  .card { padding: 20px; }
+  .comparison-card-left, .comparison-card-right { padding: 24px 20px; }
+
+  /* Footer */
+  .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+  .footer-inner > div:last-child { justify-content: center; }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .hero-title { font-size: 26px !important; }
+  .section-title { font-size: 23px; }
+  .card { padding: 16px; }
+  .step-card-inner { flex-direction: column; gap: 12px; }
+  .step-card-inner .card-icon { margin-bottom: 0; }
 }
