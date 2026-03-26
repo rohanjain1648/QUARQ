@@ -395,7 +395,7 @@ export default function Home() {
                 'A presence, not a session',
                 'Hybrid memory: weights + DB + context',
                 'Learns your patterns, not just your facts',
-                'Unique model per person',
+                'Unique SLM per person',
               ].map((item) => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ color: '#8a7460', fontSize: '14px' }}>✓</span>
@@ -403,9 +403,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <p style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-faint)', lineHeight: '1.6', marginTop: '20px' }}>
-              &ldquo;It doesn&apos;t remember you. It knows you.&rdquo;
-            </p>
           </div>
         </div>
       </Section>
