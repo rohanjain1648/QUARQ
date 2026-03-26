@@ -208,7 +208,7 @@ export default function Home() {
           <h2 className="section-title gradient-text">Three layers of continual learning.</h2>
           <p className="section-sub">
             Quarq doesn&apos;t use one memory approach. It uses all three. Different patterns belong in
-            different places. Quarq routes between them automatically, because it knows you.
+            different places. Quarq routes between them automatically.
           </p>
         </div>
 
