@@ -60,6 +60,47 @@ function AuroraBackground() {
 }
 
 /* ═══════════════════════════════════════════════════════
+   QUARQ FULL LOGO SVG — Theme Aware
+   ═══════════════════════════════════════════════════════ */
+function QuarqLogo({ height = 24 }: { height?: number }) {
+  return (
+    <svg 
+      viewBox="0 0 340 100" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+      style={{ height, width: 'auto' }}
+    >
+      <path 
+        d="M 78 50 A 30 30 0 1 1 60.6 22.7" 
+        stroke="var(--text-primary)" 
+        strokeWidth="10" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      />
+      <path 
+        d="M 71 69 L 83 79" 
+        stroke="var(--text-primary)" 
+        strokeWidth="10" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      />
+      <circle cx="77" cy="32" r="7" fill="#c9a461"/>
+      <text 
+        x="108" 
+        y="68" 
+        fontFamily="'Space Grotesk', system-ui, sans-serif" 
+        fontSize="52" 
+        fontWeight="600" 
+        letterSpacing="-0.03em" 
+        fill="var(--text-primary)"
+      >
+        Quarq
+      </text>
+    </svg>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════
    PROCEDURAL AVATAR GENERATOR
    ═══════════════════════════════════════════════════════ */
 function AgentAvatar({ name, size = 80 }: { name: string; size?: number }) {
@@ -295,7 +336,7 @@ export default function SetupWizard() {
       }}>
         {/* Logo */}
         <a href="/" style={{ marginBottom: '40px' }}>
-          <img src="/quarq-logo.svg" alt="Quarq" style={{ height: '28px' }} />
+          <QuarqLogo height={28} />
         </a>
 
         {/* Progress */}

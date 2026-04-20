@@ -84,7 +84,7 @@ function QMark({ size = 40, className = '' }: { size?: number; className?: strin
     <svg width={size} height={size} viewBox="0 0 60 60" fill="none" className={className}>
       <path
         d="M 42 30 A 16 16 0 1 1 32.8 15.1"
-        stroke="#f0ece6"
+        stroke="var(--text-primary)"
         strokeWidth={5 / scale > 10 ? 10 : Math.max(5, 8 * scale)}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -93,7 +93,7 @@ function QMark({ size = 40, className = '' }: { size?: number; className?: strin
       />
       <path
         d="M 38.5 40 L 45 45.5"
-        stroke="#f0ece6"
+        stroke="var(--text-primary)"
         strokeWidth={5 / scale > 10 ? 10 : Math.max(5, 8 * scale)}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -101,6 +101,47 @@ function QMark({ size = 40, className = '' }: { size?: number; className?: strin
         style={{ transformOrigin: 'center' }}
       />
       <circle cx={41 * scale} cy={19 * scale} r={4 * scale} fill="#c9a461" />
+    </svg>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════
+   QUARQ FULL LOGO SVG — Theme Aware
+   ═══════════════════════════════════════════════════════ */
+function QuarqLogo({ height = 24 }: { height?: number }) {
+  return (
+    <svg 
+      viewBox="0 0 340 100" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+      style={{ height, width: 'auto' }}
+    >
+      <path 
+        d="M 78 50 A 30 30 0 1 1 60.6 22.7" 
+        stroke="var(--text-primary)" 
+        strokeWidth="10" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      />
+      <path 
+        d="M 71 69 L 83 79" 
+        stroke="var(--text-primary)" 
+        strokeWidth="10" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      />
+      <circle cx="77" cy="32" r="7" fill="#c9a461"/>
+      <text 
+        x="108" 
+        y="68" 
+        fontFamily="'Space Grotesk', system-ui, sans-serif" 
+        fontSize="52" 
+        fontWeight="600" 
+        letterSpacing="-0.03em" 
+        fill="var(--text-primary)"
+      >
+        Quarq
+      </text>
     </svg>
   )
 }
@@ -151,11 +192,27 @@ function ThemeIcon({ theme }: { theme: string }) {
    NAVIGATION
    ═══════════════════════════════════════════════════════ */
 function Nav({ theme, onToggleTheme }: { theme: string; onToggleTheme: () => void }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+    if (!isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+  }
+
+  const closeMenu = () => {
+    setIsMenuOpen(false)
+    document.body.style.overflow = 'unset'
+  }
+
   return (
-    <nav className="nav">
+    <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
       <div className="nav-pill">
-        <a href="/" className="nav-logo">
-          <img src="/quarq-logo.svg" alt="Quarq" style={{ height: '24px', width: 'auto' }} />
+        <a href="/" className="nav-logo" onClick={closeMenu}>
+          <QuarqLogo height={24} />
         </a>
         <div className="nav-links">
           <a href="#features">Features</a>
@@ -173,6 +230,28 @@ function Nav({ theme, onToggleTheme }: { theme: string; onToggleTheme: () => voi
             <ThemeIcon theme={theme} />
           </button>
           <a href="/auth" className="nav-cta">Get Started</a>
+          
+          <button 
+            className={`hamburger ${isMenuOpen ? 'active' : ''}`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`mobile-menu ${isMenuOpen ? 'active' : ''}`}>
+        <div className="mobile-menu-inner">
+          <div className="mobile-menu-links">
+            <a href="#features" onClick={closeMenu}>Features</a>
+            <a href="#architecture" onClick={closeMenu}>Architecture</a>
+            <a href="#why-quarq" onClick={closeMenu}>Why Quarq</a>
+            <a href="/auth" className="mobile-menu-cta" onClick={closeMenu}>Get Started</a>
+          </div>
         </div>
       </div>
     </nav>
@@ -568,7 +647,7 @@ export default function Home() {
       <footer className="footer">
         <div className="footer-inner">
           <div className="footer-brand">
-            <img src="/quarq-logo.svg" alt="Quarq" style={{ height: '20px', width: 'auto' }} />
+            <QuarqLogo height={20} />
             <span className="footer-tagline">AI that knows you.</span>
           </div>
           <div className="footer-links">
