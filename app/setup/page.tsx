@@ -302,12 +302,14 @@ export default function SetupWizard() {
         <WizardProgress step={step} total={4} />
 
         {/* Step Content */}
-        <div style={{ 
-          width: '100%', 
-          maxWidth: '640px', 
-          animation: `${slideDir === 'right' ? 'slide-in-right' : 'slide-in-left'} 0.4s var(--ease-out-expo)`,
-          key: step,
-        }}>
+        <div 
+          key={step}
+          style={{ 
+            width: '100%', 
+            maxWidth: '640px', 
+            animation: `${slideDir === 'right' ? 'slide-in-right' : 'slide-in-left'} 0.4s var(--ease-out-expo)`,
+          }}
+        >
           {/* ─── STEP 1: NAME ─── */}
           {step === 1 && (
             <div className="glass-elevated" style={{ padding: '48px 40px', borderRadius: 'var(--radius-xl)', textAlign: 'center' }}>
