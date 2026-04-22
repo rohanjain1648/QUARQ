@@ -313,6 +313,37 @@ function Intro() {
 }
 
 /* ═══════════════════════════════════════════════════════
+   WINDOW BOX — Mac Decor Component
+   ═══════════════════════════════════════════════════════ */
+function WindowBox({ 
+  children, 
+  title, 
+  className = "", 
+  id = "" 
+}: { 
+  children: React.ReactNode; 
+  title?: string; 
+  className?: string;
+  id?: string;
+}) {
+  return (
+    <div className={`window-box ${className}`} id={id}>
+      <div className="window-header">
+        <div className="window-controls">
+          <div className="window-dot dot-red" />
+          <div className="window-dot dot-yellow" />
+          <div className="window-dot dot-green" />
+        </div>
+        {title && <span className="window-title">{title}</span>}
+      </div>
+      <div className="window-body">
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════
    MAIN PAGE
    ═══════════════════════════════════════════════════════ */
 export default function Home() {
@@ -399,48 +430,48 @@ export default function Home() {
 
             <div className="features-grid">
               {/* Feature 1 */}
-              <div className="glass-card animate-in animate-delay-1" id="feature-memory">
+              <WindowBox title="Terminal / Memory" id="feature-memory" className="animate-in animate-delay-1">
                 <div className="feature-icon">🧠</div>
                 <h3 className="feature-title">Cognitive Memory</h3>
                 <p className="feature-text">
                   Three-tier architecture: Semantic memory for facts, Episodic memory for experiences, 
                   and Procedural memory for behavioral rules. Each optimized for what it does best.
                 </p>
-                <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', flexWrap: 'wrap', paddingTop: '16px' }}>
                   <span className="tag">Semantic</span>
                   <span className="tag">Episodic</span>
                   <span className="tag">Procedural</span>
                 </div>
-              </div>
+              </WindowBox>
 
               {/* Feature 2 */}
-              <div className="glass-card animate-in animate-delay-2" id="feature-learning">
+              <WindowBox title="Runtime / Learning" id="feature-learning" className="animate-in animate-delay-2">
                 <div className="feature-icon">🔄</div>
                 <h3 className="feature-title">Continual Learning</h3>
                 <p className="feature-text">
                   Every conversation makes your agent smarter. It learns new facts, updates existing knowledge, 
                   and resolves contradictions autonomously — all in the background, zero latency.
                 </p>
-                <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', flexWrap: 'wrap', paddingTop: '16px' }}>
                   <span className="tag">Background Learning</span>
                   <span className="tag">Auto-Update</span>
                 </div>
-              </div>
+              </WindowBox>
 
               {/* Feature 3 */}
-              <div className="glass-card animate-in animate-delay-3" id="feature-skills">
+              <WindowBox title="Modules / Skills" id="feature-skills" className="animate-in animate-delay-3">
                 <div className="feature-icon">🛠️</div>
                 <h3 className="feature-title">Extensible Skills</h3>
                 <p className="feature-text">
                   Plug-and-play tool system with progressive disclosure. Email, Calendar, and custom skills 
                   are auto-discovered. Add a new skill by dropping in a folder — zero config.
                 </p>
-                <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', flexWrap: 'wrap', paddingTop: '16px' }}>
                   <span className="tag-amber tag">Email</span>
                   <span className="tag-amber tag">Calendar</span>
                   <span className="tag-amber tag">Custom</span>
                 </div>
-              </div>
+              </WindowBox>
             </div>
           </div>
         </section>
@@ -459,11 +490,11 @@ export default function Home() {
 
             <div className="arch-flow">
               {/* Loop 1 */}
-              <div className="arch-node animate-in animate-delay-1">
+              <WindowBox title="Process / Loop 1" className="animate-in animate-delay-1">
                 <div className="arch-node-header">
                   <div className="arch-node-label">
                     <div className="arch-node-dot" />
-                    <span className="mono-label" style={{ color: 'var(--accent)', margin: 0 }}>Loop 1</span>
+                    <span className="mono-label" style={{ color: 'var(--accent)', margin: 0 }}>Reranking</span>
                   </div>
                   <span className="tag-amber tag">Blocks Response</span>
                 </div>
@@ -472,7 +503,7 @@ export default function Home() {
                   Fires three concurrent searches across semantic, episodic, and procedural memory. 
                   LLM-filtered retrieval — the model decides what&apos;s relevant, not keyword matching.
                 </p>
-              </div>
+              </WindowBox>
 
               <div className="arch-connector">
                 <div className="arch-connector-line" />
@@ -480,11 +511,11 @@ export default function Home() {
               </div>
 
               {/* Loop 2 */}
-              <div className="arch-node animate-in animate-delay-2">
+              <WindowBox title="Process / Loop 2" className="animate-in animate-delay-2">
                 <div className="arch-node-header">
                   <div className="arch-node-label">
                     <div className="arch-node-dot" />
-                    <span className="mono-label" style={{ color: 'var(--accent)', margin: 0 }}>Loop 2</span>
+                    <span className="mono-label" style={{ color: 'var(--accent)', margin: 0 }}>Reasoning</span>
                   </div>
                   <span className="tag-amber tag">Blocks Response</span>
                 </div>
@@ -493,7 +524,7 @@ export default function Home() {
                   Builds a context-rich system prompt with prioritized memory. Generates response, then 
                   passes through a procedural compliance gate to enforce behavioral rules.
                 </p>
-              </div>
+              </WindowBox>
 
               <div className="arch-connector">
                 <div className="arch-connector-line" />
@@ -521,11 +552,11 @@ export default function Home() {
 
               {/* Loop 3 & 4 */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div className="arch-node animate-in animate-delay-4">
+                <WindowBox title="Post-Process / Loop 3" className="animate-in animate-delay-4">
                   <div className="arch-node-header">
                     <div className="arch-node-label">
                       <div className="arch-node-dot" style={{ background: 'var(--success)' }} />
-                      <span className="mono-label" style={{ color: 'var(--success)', margin: 0 }}>Loop 3</span>
+                      <span className="mono-label" style={{ color: 'var(--success)', margin: 0 }}>Assimilation</span>
                     </div>
                     <span className="tag">Background</span>
                   </div>
@@ -533,13 +564,13 @@ export default function Home() {
                   <p className="arch-node-desc">
                     Analyzes every interaction. Learns new facts, updates existing knowledge, fires and forgets.
                   </p>
-                </div>
+                </WindowBox>
 
-                <div className="arch-node animate-in animate-delay-5">
+                <WindowBox title="Background / Loop 4" className="animate-in animate-delay-5">
                   <div className="arch-node-header">
                     <div className="arch-node-label">
                       <div className="arch-node-dot" style={{ background: 'var(--info)' }} />
-                      <span className="mono-label" style={{ color: 'var(--info)', margin: 0 }}>Loop 4</span>
+                      <span className="mono-label" style={{ color: 'var(--info)', margin: 0 }}>Optimization</span>
                     </div>
                     <span className="tag">Periodic</span>
                   </div>
@@ -547,7 +578,7 @@ export default function Home() {
                   <p className="arch-node-desc">
                     Every 10 turns: deduplicates, merges, resolves contradictions, rewrites for retrieval.
                   </p>
-                </div>
+                </WindowBox>
               </div>
             </div>
           </div>
@@ -567,8 +598,8 @@ export default function Home() {
 
             <div className="comparison-grid">
               <div className="comparison-card comparison-card-others animate-in animate-delay-1">
-                <p className="comparison-label" style={{ color: 'var(--danger)' }}>
-                  Today&apos;s AI Assistants
+                <p className="comparison-label" style={{ color: 'var(--danger)', marginBottom: '24px' }}>
+                  Traditional Session AI
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {[
@@ -588,8 +619,8 @@ export default function Home() {
               </div>
 
               <div className="comparison-card comparison-card-quarq animate-in animate-delay-2">
-                <p className="comparison-label" style={{ color: 'var(--accent)' }}>
-                  Quarq
+                <p className="comparison-label" style={{ color: 'var(--accent)', marginBottom: '24px' }}>
+                  The Quarq Presence
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {[
@@ -621,38 +652,37 @@ export default function Home() {
             </div>
 
             <div className="features-grid">
-              <div className="glass-card animate-in animate-delay-1">
+              <WindowBox title="System / Persistence" className="animate-in animate-delay-1">
                 <div className="feature-icon">📡</div>
                 <h3 className="feature-title">Persistent Runtime</h3>
                 <p className="feature-text">
                   Quarq runs in the background, continuously processing and learning. 
                   No cold starts, no context loading, no warmup time.
                 </p>
-              </div>
-              <div className="glass-card animate-in animate-delay-2">
+              </WindowBox>
+              <WindowBox title="System / Awareness" className="animate-in animate-delay-2">
                 <div className="feature-icon">👁️</div>
                 <h3 className="feature-title">Ambient Awareness</h3>
                 <p className="feature-text">
                   It observes patterns across your interactions: how you write, what you prioritize, 
                   when you&apos;re focused vs. scattered.
                 </p>
-              </div>
-              <div className="glass-card animate-in animate-delay-3">
+              </WindowBox>
+              <WindowBox title="System / Network" className="animate-in animate-delay-3">
                 <div className="feature-icon">🌐</div>
                 <h3 className="feature-title">Cross-Platform</h3>
                 <p className="feature-text">
                   One agent, every surface. Web, Telegram, and more coming. 
                   Your Quarq is the same presence everywhere.
                 </p>
-              </div>
+              </WindowBox>
             </div>
           </div>
         </section>
-
         {/* ═══ BOTTOM CTA ═══ */}
         <section className="section" style={{ paddingBottom: '60px' }}>
           <div className="container">
-            <div className="glass-card-amber glass-card" style={{ 
+            <div className="glass-card-amber glass-card animate-in" style={{ 
               maxWidth: '640px', 
               margin: '0 auto', 
               textAlign: 'center',

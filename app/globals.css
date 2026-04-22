@@ -136,6 +136,82 @@
   visibility: visible;
 }
 
+/* ─── Window Style System (Mac Decor) ─── */
+.window-box {
+  background: var(--bg-elevated);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border var(--transition-normal);
+  height: 100%;
+}
+
+.window-box:hover {
+  transform: translateY(-4px);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.window-header {
+  height: 36px;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+[data-theme="light"] .window-header {
+  background: rgba(0,0,0,0.05);
+}
+
+.window-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.window-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+.window-box:hover .window-dot {
+  opacity: 1;
+}
+
+.dot-red { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green { background: #27c93f; }
+
+.window-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  letter-spacing: 0.15em;
+  font-weight: 500;
+}
+
+.window-body {
+  padding: 32px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .window-body {
+    padding: 24px;
+  }
+}
+
 /* ─── Design Tokens ─── */
 :root {
   /* Backgrounds */

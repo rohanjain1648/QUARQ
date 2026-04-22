@@ -1,11 +1,9 @@
 'use client'
 
-import { useState, FormEvent, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
-/* ═══════════════════════════════════════════════════════
-   THEME TOGGLE HOOK
-   ═══════════════════════════════════════════════════════ */
 function useTheme() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
 
@@ -26,9 +24,6 @@ function useTheme() {
   return { theme, toggle }
 }
 
-/* ═══════════════════════════════════════════════════════
-   THEME TOGGLE ICON
-   ═══════════════════════════════════════════════════════ */
 function ThemeIcon({ theme }: { theme: string }) {
   if (theme === 'light') {
     return (
@@ -45,9 +40,6 @@ function ThemeIcon({ theme }: { theme: string }) {
   )
 }
 
-/* ═══════════════════════════════════════════════════════
-   AURORA BACKGROUND (shared)
-   ═══════════════════════════════════════════════════════ */
 function AuroraBackground() {
   return (
     <div className="aurora-bg">
@@ -59,9 +51,6 @@ function AuroraBackground() {
   )
 }
 
-/* ═══════════════════════════════════════════════════════
-   Q-MARK SVG
-   ═══════════════════════════════════════════════════════ */
 function QMark({ size = 40 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
@@ -74,55 +63,82 @@ function QMark({ size = 40 }: { size?: number }) {
   )
 }
 
-/* ═══════════════════════════════════════════════════════
-   AUTH PAGE
-   ═══════════════════════════════════════════════════════ */
 export default function AuthPage() {
   const router = useRouter()
   const { theme, toggle: toggleTheme } = useTheme()
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  // Form state
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
+    setError('')
 
-    // Mock auth — store user data in localStorage
-    setTimeout(() => {
-      const userData = {
-        name: mode === 'signup' ? name : 'User',
-        email,
-        loggedIn: true,
-        createdAt: new Date().toISOString(),
+    if (mode === 'signup' && password !== confirmPassword) {
+      setError('Passwords do not match.')
+      return
+    }
+
+    setLoading(true)
+    const supabase = createClient()
+
+    try {
+      if (mode === 'signup') {
+        const { error: signupError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { display_name: name } },
+        })
+        if (signupError) throw signupError
+
+        // Update display_name in profiles
+        if (name) {
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) {
+            await supabase.from('profiles').update({ display_name: name }).eq('id', user.id)
+          }
+        }
+
+        router.push('/setup')
+      } else {
+        const { error: loginError } = await supabase.auth.signInWithPassword({ email, password })
+        if (loginError) throw loginError
+
+        // Check if profile has agent_name set (already went through setup)
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('agent_name')
+            .eq('id', user.id)
+            .single()
+
+          router.push(profile?.agent_name ? '/chat' : '/setup')
+        } else {
+          router.push('/setup')
+        }
       }
-      localStorage.setItem('quarq_user', JSON.stringify(userData))
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Something went wrong.'
+      setError(msg)
+    } finally {
       setLoading(false)
-      router.push('/setup')
-    }, 1200)
+    }
   }
 
   return (
     <div className="page-container">
       <AuroraBackground />
 
-      {/* Back to home */}
       <a href="/" style={{
-        position: 'fixed',
-        top: '24px',
-        left: '24px',
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        color: 'var(--text-tertiary)',
-        fontSize: '13px',
-        fontFamily: 'var(--font-mono)',
+        position: 'fixed', top: '24px', left: '24px', zIndex: 100,
+        display: 'flex', alignItems: 'center', gap: '8px',
+        color: 'var(--text-tertiary)', fontSize: '13px', fontFamily: 'var(--font-mono)',
         transition: 'color 0.2s',
       }}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -132,76 +148,47 @@ export default function AuthPage() {
       </a>
 
       <div style={{ position: 'fixed', top: '24px', right: '24px', zIndex: 100 }}>
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
+        <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
           <ThemeIcon theme={theme} />
         </button>
       </div>
 
       <div className="auth-container">
         <div className="auth-card animate-in">
-          {/* Logo */}
           <div className="auth-logo">
             <QMark size={52} />
           </div>
 
-          {/* Heading */}
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
             <h1 className="heading-lg" style={{ marginBottom: '6px' }}>
               {mode === 'login' ? 'Welcome back' : 'Create your account'}
             </h1>
             <p className="body-sm">
-              {mode === 'login' 
-                ? 'Sign in to continue to your Quarq agent' 
-                : 'Start building your cognitive AI agent'
-              }
+              {mode === 'login'
+                ? 'Sign in to continue to your Quarq agent'
+                : 'Start building your cognitive AI agent'}
             </p>
           </div>
 
-          {/* Tab Switcher */}
           <div className="auth-tabs">
-            <button
-              className={`auth-tab ${mode === 'login' ? 'auth-tab-active' : ''}`}
-              onClick={() => setMode('login')}
-              type="button"
-              id="auth-tab-login"
-            >
-              Log In
-            </button>
-            <button
-              className={`auth-tab ${mode === 'signup' ? 'auth-tab-active' : ''}`}
-              onClick={() => setMode('signup')}
-              type="button"
-              id="auth-tab-signup"
-            >
-              Sign Up
-            </button>
+            <button className={`auth-tab ${mode === 'login' ? 'auth-tab-active' : ''}`} onClick={() => { setMode('login'); setError('') }} type="button" id="auth-tab-login">Log In</button>
+            <button className={`auth-tab ${mode === 'signup' ? 'auth-tab-active' : ''}`} onClick={() => { setMode('signup'); setError('') }} type="button" id="auth-tab-signup">Sign Up</button>
           </div>
 
-          {/* Social Auth */}
-          <div className="auth-social">
-            <button className="auth-social-btn" type="button" id="auth-google">
-              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
-              Google
-            </button>
-            <button className="auth-social-btn" type="button" id="auth-github">
-              <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-              GitHub
-            </button>
-          </div>
+          {error && (
+            <div style={{
+              padding: '10px 14px',
+              background: 'rgba(239,68,68,0.1)',
+              border: '1px solid rgba(239,68,68,0.3)',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '13px',
+              color: '#f87171',
+              marginBottom: '16px',
+            }}>
+              {error}
+            </div>
+          )}
 
-          {/* Divider */}
-          <div className="auth-divider">
-            <div className="auth-divider-line" />
-            <span className="auth-divider-text">or continue with email</span>
-            <div className="auth-divider-line" />
-          </div>
-
-          {/* Form */}
           <form className="auth-form" onSubmit={handleSubmit}>
             {mode === 'signup' && (
               <div className="auth-field animate-in" style={{ animationDelay: '0.05s' }}>
@@ -262,11 +249,7 @@ export default function AuthPage() {
             )}
 
             {mode === 'login' && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-                  <input type="checkbox" style={{ accentColor: 'var(--accent)' }} />
-                  Remember me
-                </label>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button type="button" style={{ fontSize: '13px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}>
                   Forgot password?
                 </button>
@@ -293,16 +276,10 @@ export default function AuthPage() {
             </button>
           </form>
 
-          {/* Bottom text */}
-          <p style={{ 
-            textAlign: 'center', 
-            marginTop: '24px', 
-            fontSize: '13px', 
-            color: 'var(--text-tertiary)' 
-          }}>
-            {mode === 'login' 
-              ? <>Don&apos;t have an account? <button type="button" onClick={() => setMode('signup')} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Sign up</button></>
-              : <>Already have an account? <button type="button" onClick={() => setMode('login')} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Log in</button></>
+          <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
+            {mode === 'login'
+              ? <>Don&apos;t have an account? <button type="button" onClick={() => { setMode('signup'); setError('') }} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Sign up</button></>
+              : <>Already have an account? <button type="button" onClick={() => { setMode('login'); setError('') }} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Log in</button></>
             }
           </p>
         </div>
