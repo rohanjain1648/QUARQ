@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
-// GET /api/conversations?channel_id=xxx  — returns active conversation for a channel
 export async function GET(req: NextRequest) {
   const supabase = await createClient()
 
@@ -31,7 +30,6 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ conversations: data })
 }
 
-// POST /api/conversations — create a new conversation for a channel
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
 
@@ -40,13 +38,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { channel_id, title } = await req.json()
+  // 🛠️ CHANGED: Wrapped JSON parsing in try/catch
+  let body;
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+
+  const { channel_id, title } = body
 
   if (!channel_id) {
     return NextResponse.json({ error: 'channel_id is required' }, { status: 400 })
   }
 
-  // Deactivate all existing conversations for this channel before creating a new one
   await supabase
     .from('conversations')
     .update({ is_active: false })

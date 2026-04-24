@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
-// GET /api/integrations?provider=google — fetch user's integrations
 export async function GET(req: NextRequest) {
   const supabase = await createClient()
 
@@ -29,15 +28,20 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ integrations: data })
 }
 
-// POST /api/integrations — store an OAuth integration
-// access_token and refresh_token should already be encrypted by caller
-// (encrypt on server before calling, or encrypt here — this stores enc values)
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
 
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // 🛠️ CHANGED: Wrapped JSON parsing in try/catch
+  let body;
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
   const {
@@ -49,13 +53,12 @@ export async function POST(req: NextRequest) {
     expires_at,
     scopes,
     metadata,
-  } = await req.json()
+  } = body
 
   if (!provider || !access_token_enc) {
     return NextResponse.json({ error: 'provider and access_token_enc are required' }, { status: 400 })
   }
 
-  // Upsert: one active integration per provider per user
   const { data, error } = await supabase
     .from('integrations')
     .upsert(
@@ -83,7 +86,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ integration: data }, { status: 201 })
 }
 
-// DELETE /api/integrations?provider=google — revoke an integration
 export async function DELETE(req: NextRequest) {
   const supabase = await createClient()
 

@@ -30,9 +30,17 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = await req.json()
+  // 🛠️ CHANGED: Wrapped JSON parsing in try/catch
+  let body;
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+
   const allowed = ['display_name', 'agent_name', 'agent_personality', 'agent_use_cases', 'agent_custom_prompt', 'timezone']
   const updates: Record<string, unknown> = {}
+  
   for (const key of allowed) {
     if (key in body) updates[key] = body[key]
   }
