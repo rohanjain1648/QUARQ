@@ -155,9 +155,18 @@ function renderMarkdown(text: string): React.ReactNode[] {
   })
 }
 
-function TelegramModal({ agentName, onClose }: { agentName: string; onClose: () => void }) {
+// 🛠️ CHANGED: Updated TelegramModal to receive and display the dynamic link
+function TelegramModal({ agentName, onClose, token, loading }: { 
+  agentName: string; 
+  onClose: () => void;
+  token: string | null;
+  loading: boolean;
+}) {
   const [copied, setCopied] = useState(false)
-  const botLink = 'https://t.me/QuarqAgentBot'
+  
+  const botLink = token 
+    ? `https://t.me/quarq_agent_bot?start=${token}` 
+    : 'https://t.me/quarq_agent_bot'
 
   const copyLink = () => {
     navigator.clipboard.writeText(botLink)
@@ -167,31 +176,103 @@ function TelegramModal({ agentName, onClose }: { agentName: string; onClose: () 
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={e => e.stopPropagation()} style={{ position: 'relative' }}>
-        <button className="modal-close" onClick={onClose} id="telegram-modal-close">✕</button>
+      <div className="modal-card" onClick={e => e.stopPropagation()} style={{ 
+        padding: '32px',
+        maxWidth: '420px',
+        width: '90%'
+      }}>
+        <button className="modal-close" onClick={onClose}>✕</button>
+        
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 0 30px rgba(42,171,238,0.3)' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+          <div style={{ 
+            width: '64px', height: '64px', borderRadius: '20px', 
+            background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center', 
+            margin: '0 auto 20px', boxShadow: '0 8px 24px rgba(42,171,238,0.3)' 
+          }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+            </svg>
           </div>
-          <h3 className="heading-lg" style={{ marginBottom: '8px' }}>Connect to Telegram</h3>
-          <p className="body-md">Chat with {agentName} directly in Telegram. Your memory and personality carry over.</p>
+          <h3 className="heading-lg" style={{ marginBottom: '8px', fontSize: '24px' }}>Connect Telegram</h3>
+          <p className="body-md" style={{ opacity: 0.7 }}>
+            Chat with <strong>{agentName}</strong> on the go. Your cognitive memory is synced.
+          </p>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '32px' }}>
-          {[{ step: 1, text: 'Open Telegram on your phone or desktop' }, { step: 2, text: 'Search for @QuarqAgentBot or click the link below' }, { step: 3, text: 'Press "Start" to activate your agent' }].map(({ step, text }) => (
-            <div key={step} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--accent-dim)', border: '1px solid var(--accent-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600, color: 'var(--accent)', flexShrink: 0 }}>{step}</div>
-              <p className="body-md" style={{ paddingTop: '3px' }}>{text}</p>
+
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '40px 0' }}>
+            <div className="spinner" style={{ margin: '0 auto 16px', width: '32px', height: '32px' }} />
+            <p className="mono-sm" style={{ opacity: 0.5 }}>Generating secure link...</p>
+          </div>
+        ) : (
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '28px' }}>
+              {[{ step: 1, text: 'Open Telegram' }, { step: 2, text: 'Press "Start" to sync' }].map(({ step, text }) => (
+                <div key={step} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <div style={{ 
+                    width: '24px', height: '24px', borderRadius: '50%', 
+                    background: 'var(--accent-dim)', color: 'var(--accent)', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                    fontSize: '12px', fontWeight: 700, flexShrink: 0 
+                  }}>{step}</div>
+                  <p className="body-md" style={{ fontSize: '15px' }}>{text}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: '10px', padding: '12px 16px', background: 'var(--bg-surface)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-md)', alignItems: 'center', marginBottom: '20px' }}>
-          <span className="mono-sm" style={{ flex: 1, color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{botLink}</span>
-          <button className="btn-secondary btn-sm" onClick={copyLink} style={{ flexShrink: 0 }} id="copy-telegram-link">{copied ? '✓ Copied' : 'Copy'}</button>
-        </div>
-        <a href={botLink} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ width: '100%', textAlign: 'center', justifyContent: 'center' }} id="open-telegram-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-          Open in Telegram
-        </a>
+
+            {/* 🛠️ THE FIX: Grouping Link and Copy button in one row */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px', 
+              padding: '8px 8px 8px 16px', 
+              background: 'var(--bg-surface)', 
+              border: '1px solid var(--glass-border)', 
+              borderRadius: '14px',
+              marginBottom: '20px'
+            }}>
+              <span className="mono-sm" style={{ 
+                flex: 1, 
+                fontSize: '12px', 
+                opacity: 0.6, 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis', 
+                whiteSpace: 'nowrap' 
+              }}>
+                {botLink}
+              </span>
+              <button 
+                onClick={copyLink}
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: '10px',
+                  background: copied ? 'var(--success-dim)' : 'rgba(255,255,255,0.05)',
+                  color: copied ? 'var(--success)' : 'var(--text-primary)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {copied ? '✓ Copied' : 'Copy'}
+              </button>
+            </div>
+
+            <a href={botLink} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ 
+              width: '100%', 
+              height: '48px',
+              justifyContent: 'center', 
+              borderRadius: '14px',
+              fontSize: '15px',
+              fontWeight: 600
+            }}>
+              Open in Telegram
+            </a>
+          </>
+        )}
       </div>
     </div>
   )
@@ -220,6 +301,30 @@ export default function ChatPage() {
   const [chatHistory, setChatHistory] = useState<{ id: string; title: string; time: string; active: boolean }[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  const [connectionToken, setConnectionToken] = useState<string | null>(null)
+  const [tokenLoading, setTokenLoading] = useState(false)
+
+  // 🛠️ CHANGED: Function to fetch the secure connection token
+  const handleTelegramSetupClick = async () => {
+    setShowTelegram(true)
+    setTokenLoading(true)
+    try {
+      const res = await fetch('/api/channels/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channel_type: 'telegram' })
+      })
+      if (res.ok) {
+        const { token } = await res.json()
+        setConnectionToken(token)
+      }
+    } catch (err) {
+      console.error('Failed to get connection token', err)
+    } finally {
+      setTokenLoading(false)
+    }
+  }
 
   // Bootstrap: load profile, get/create web channel, load conversation history
   useEffect(() => {
@@ -440,7 +545,7 @@ export default function ChatPage() {
         </div>
 
         <div className="chat-sidebar-footer">
-          <button className="glass-card" onClick={() => setShowTelegram(true)} style={{ width: '100%', padding: '14px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', border: '1px solid rgba(42,171,238,0.2)', background: 'rgba(42,171,238,0.05)' }} id="telegram-setup-btn">
+          <button className="glass-card" onClick={handleTelegramSetupClick} style={{ width: '100%', padding: '14px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', border: '1px solid rgba(42,171,238,0.2)', background: 'rgba(42,171,238,0.05)' }} id="telegram-setup-btn">
             <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
             </div>
@@ -565,7 +670,12 @@ export default function ChatPage() {
         </div>
       </main>
 
-      {showTelegram && <TelegramModal agentName={agentName} onClose={() => setShowTelegram(false)} />}
+      {showTelegram &&  <TelegramModal 
+          agentName={agentName} 
+          onClose={() => setShowTelegram(false)} 
+          token={connectionToken}
+          loading={tokenLoading}
+        />}
     </div>
   )
 }
