@@ -28,14 +28,14 @@ function ThemeIcon({ theme }: { theme: string }) {
   if (theme === 'light') {
     return (
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-        <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.3"/>
+        <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+        <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.3" />
       </svg>
     )
   }
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path d="M13.5 8.5a5.5 5.5 0 01-6-6A5.5 5.5 0 108 14a5.5 5.5 0 005.5-5.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M13.5 8.5a5.5 5.5 0 01-6-6A5.5 5.5 0 108 14a5.5 5.5 0 005.5-5.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -54,8 +54,8 @@ function AuroraBackground() {
 function QMark({ size = 40 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
-      <path d="M 68 50 A 24 24 0 1 1 54.1 28.3" stroke="#f0ece6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M 62 62 L 72 71" stroke="#f0ece6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M 68 50 A 24 24 0 1 1 54.1 28.3" stroke="#f0ece6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M 62 62 L 72 71" stroke="#f0ece6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="67" cy="33" r="6" fill="#c9a461">
         <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite" />
       </circle>
@@ -68,7 +68,7 @@ export default function AuthPage() {
   const { theme, toggle: toggleTheme } = useTheme()
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [message, setMessage] = useState<{message:string;color:string} | null>({message:'',color:''})
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -77,10 +77,10 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setError('')
+    setMessage(null)
 
     if (mode === 'signup' && password !== confirmPassword) {
-      setError('Passwords do not match.')
+      setMessage({message:'Passwords do not match.',color:'#f87171'})
       return
     }
 
@@ -89,35 +89,45 @@ export default function AuthPage() {
 
     try {
       if (mode === 'signup') {
+        // 1. Sign up the user (Stores name in auth.users metadata)
         const { error: signupError } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { display_name: name } },
+          options: {
+            data: { display_name: name }
+          },
         })
+
         if (signupError) throw signupError
 
-        // Update display_name in profiles
-        if (name) {
-          const { data: { user } } = await supabase.auth.getUser()
-          if (user) {
-            await supabase.from('profiles').update({ display_name: name }).eq('id', user.id)
-          }
-        }
+        // Stop here! Tell them to check their email. 
+        // We cannot update public.profiles yet because they are not logged in (RLS blocks it).
+        setMessage({message:'Success! Please check your email to confirm your account before logging in.',color:'#f87171'})
 
-        router.push('/setup')
       } else {
-        const { error: loginError } = await supabase.auth.signInWithPassword({ email, password })
+        // --- LOGIN FLOW ---
+        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password })
         if (loginError) throw loginError
 
-        // Check if profile has agent_name set (already went through setup)
-        const { data: { user } } = await supabase.auth.getUser()
+        const user = loginData.user
+
         if (user) {
+          // 1. Fetch their public profile
           const { data: profile } = await supabase
             .from('profiles')
-            .select('agent_name')
+            .select('agent_name, display_name')
             .eq('id', user.id)
             .single()
 
+          // 2. YOUR LOGIC: If public display_name is missing, sync it from auth.users metadata!
+          if (!profile?.display_name && user.user_metadata?.display_name) {
+            await supabase
+              .from('profiles')
+              .update({ display_name: user.user_metadata.display_name })
+              .eq('id', user.id)
+          }
+
+          // 3. Route them based on whether they finished agent setup
           router.push(profile?.agent_name ? '/chat' : '/setup')
         } else {
           router.push('/setup')
@@ -125,7 +135,7 @@ export default function AuthPage() {
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Something went wrong.'
-      setError(msg)
+      setMessage({message:msg,color:'#f87171'})
     } finally {
       setLoading(false)
     }
@@ -142,7 +152,7 @@ export default function AuthPage() {
         transition: 'color 0.2s',
       }}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         Back
       </a>
@@ -171,11 +181,11 @@ export default function AuthPage() {
           </div>
 
           <div className="auth-tabs">
-            <button className={`auth-tab ${mode === 'login' ? 'auth-tab-active' : ''}`} onClick={() => { setMode('login'); setError('') }} type="button" id="auth-tab-login">Log In</button>
-            <button className={`auth-tab ${mode === 'signup' ? 'auth-tab-active' : ''}`} onClick={() => { setMode('signup'); setError('') }} type="button" id="auth-tab-signup">Sign Up</button>
+            <button className={`auth-tab ${mode === 'login' ? 'auth-tab-active' : ''}`} onClick={() => { setMode('login'); setMessage(null) }} type="button" id="auth-tab-login">Log In</button>
+            <button className={`auth-tab ${mode === 'signup' ? 'auth-tab-active' : ''}`} onClick={() => { setMode('signup'); setMessage(null) }} type="button" id="auth-tab-signup">Sign Up</button>
           </div>
 
-          {error && (
+          {message?.message && (
             <div style={{
               padding: '10px 14px',
               background: 'rgba(239,68,68,0.1)',
@@ -185,7 +195,7 @@ export default function AuthPage() {
               color: '#f87171',
               marginBottom: '16px',
             }}>
-              {error}
+              {message.message}
             </div>
           )}
 
@@ -278,8 +288,8 @@ export default function AuthPage() {
 
           <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
             {mode === 'login'
-              ? <>Don&apos;t have an account? <button type="button" onClick={() => { setMode('signup'); setError('') }} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Sign up</button></>
-              : <>Already have an account? <button type="button" onClick={() => { setMode('login'); setError('') }} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Log in</button></>
+              ? <>Don&apos;t have an account? <button type="button" onClick={() => { setMode('signup'); setMessage(null) }} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Sign up</button></>
+              : <>Already have an account? <button type="button" onClick={() => { setMode('login'); setMessage(null) }} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Log in</button></>
             }
           </p>
         </div>

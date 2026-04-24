@@ -1,44 +1,42 @@
-import { neon } from '@neondatabase/serverless';
-import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export async function POST(req: NextRequest) {
-  let email: string;
+  // 🛠️ Wrap JSON parsing to prevent 500 crashes
+  let body;
   try {
-    ({ email } = await req.json());
+    body = await req.json()
   } catch {
-    return NextResponse.json({ ok: false, message: 'Invalid request' }, { status: 400 });
+    return NextResponse.json({ ok: false, message: 'Invalid request' }, { status: 400 })
   }
+
+  const { email } = body
 
   if (!email || !EMAIL_RE.test(email)) {
-    return NextResponse.json({ ok: false, message: 'Invalid email' }, { status: 400 });
+    return NextResponse.json({ ok: false, message: 'Invalid email' }, { status: 400 })
   }
 
-  const normalized = email.toLowerCase().trim();
+  const normalized = email.toLowerCase().trim()
+  const supabase = await createClient()
 
-  try {
-    const sql = neon(process.env.POSTGRES_URL!);
+  const { error } = await supabase
+    .from('waitlist')
+    .insert({ email: normalized })
 
-    await sql`
-      CREATE TABLE IF NOT EXISTS waitlist (
-        id         SERIAL PRIMARY KEY,
-        email      TEXT UNIQUE NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT NOW()
-      )
-    `;
-
-    await sql`INSERT INTO waitlist (email) VALUES (${normalized})`;
-
-    return NextResponse.json({ ok: true, message: "You're on the list!" });
-  } catch (err: any) {
-    if (err?.code === '23505') {
-      return NextResponse.json({ ok: true, message: "You're already on the list!" });
+  if (error) {
+    // '23505' is the Postgres code for Unique Constraint Violation
+    if (error.code === '23505') {
+      return NextResponse.json({ ok: true, message: "You're already on the list!" })
     }
-    console.error('[waitlist]', err?.message ?? err);
+    
+    console.error('[waitlist error]', error.message)
     return NextResponse.json(
       { ok: false, message: 'Something went wrong. Try again.' },
       { status: 500 }
-    );
+    )
   }
+
+  return NextResponse.json({ ok: true, message: "You're on the list!" })
 }

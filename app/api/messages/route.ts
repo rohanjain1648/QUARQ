@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
-// GET /api/messages?conversation_id=xxx — fetch chat history for a conversation
 export async function GET(req: NextRequest) {
   const supabase = await createClient()
 
@@ -29,8 +28,6 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ messages: data })
 }
 
-// POST /api/messages — send a message and get agent response
-// Body: { channel_id, content, conversation_id? }
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
 
@@ -39,17 +36,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { channel_id, content, conversation_id: provided_conv_id } = await req.json()
+  // 🛠️ CHANGED: Wrapped JSON parsing in try/catch
+  let body;
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+
+  const { channel_id, content, conversation_id: provided_conv_id } = body
 
   if (!channel_id || !content?.trim()) {
     return NextResponse.json({ error: 'channel_id and content are required' }, { status: 400 })
   }
 
-  // ── Step 1: Resolve conversation ──────────────────────────────────────────
   let conversation_id = provided_conv_id
 
   if (!conversation_id) {
-    // Find existing active conversation for this channel
     const { data: existing } = await supabase
       .from('conversations')
       .select('id')
@@ -62,7 +65,6 @@ export async function POST(req: NextRequest) {
     if (existing) {
       conversation_id = existing.id
     } else {
-      // Create a new conversation
       const { data: created, error: convError } = await supabase
         .from('conversations')
         .insert({ user_id: user.id, channel_id, is_active: true })
@@ -76,7 +78,6 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── Step 2: Store the user message ────────────────────────────────────────
   const { error: insertError } = await supabase
     .from('messages')
     .insert({
@@ -90,8 +91,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: insertError.message }, { status: 500 })
   }
 
-  // ── Step 3: Fetch recent chat history (last 8 messages) ───────────────────
-  // Per DATABASE_ARCHITECTURE.md: only last 5–10 to avoid blowing LLM context
   const { data: history } = await supabase
     .from('messages')
     .select('role, content')
@@ -101,7 +100,6 @@ export async function POST(req: NextRequest) {
 
   const orderedHistory = (history ?? []).reverse()
 
-  // ── Step 4: Get channel info for channel_type ─────────────────────────────
   const { data: channel } = await supabase
     .from('channels')
     .select('channel_type')
@@ -110,7 +108,6 @@ export async function POST(req: NextRequest) {
 
   const channel_type = channel?.channel_type ?? 'web'
 
-  // ── Step 5: Call the Python Agent ─────────────────────────────────────────
   let agentResponse = ''
   let agentMetadata: Record<string, unknown> = {}
 
@@ -145,11 +142,9 @@ export async function POST(req: NextRequest) {
       agentResponse = 'I am currently unavailable. Please try again in a moment.'
     }
   } else {
-    // Agent not configured — return a placeholder
     agentResponse = 'Agent service not configured. Set AGENT_URL and AGENT_INTERNAL_SECRET in .env.local.'
   }
 
-  // ── Step 6: Store the assistant message ───────────────────────────────────
   const { data: assistantMsg, error: assistantError } = await supabase
     .from('messages')
     .insert({
