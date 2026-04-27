@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { useUser, useClerk } from '@clerk/nextjs'
 
 function useTheme() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
@@ -288,6 +288,8 @@ interface ChatMessage {
 
 export default function ChatPage() {
   const router = useRouter()
+  const { user, isLoaded } = useUser()
+  const { signOut } = useClerk()
   const { theme, toggle: toggleTheme } = useTheme()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
@@ -328,10 +330,10 @@ export default function ChatPage() {
 
   // Bootstrap: load profile, get/create web channel, load conversation history
   useEffect(() => {
+    if (!isLoaded) return
+    if (!user) { router.push('/auth'); return }
+
     async function init() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/auth'); return }
 
       // Load profile
       const profileRes = await fetch('/api/profile')
@@ -422,7 +424,7 @@ export default function ChatPage() {
 
     init()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isLoaded, user?.id])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -500,10 +502,7 @@ export default function ChatPage() {
     }
   }
 
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' })
-    router.push('/auth')
-  }
+  const handleLogout = () => signOut({ redirectUrl: '/auth' })
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() }
