@@ -126,7 +126,7 @@ export default function AuthPage() {
           </p>
         </div>
 
-        <SignIn appearance={clerkAppearance(theme)} />
+        <SignIn appearance={clerkAppearance(theme)} fallbackRedirectUrl="/chat" />
       </div>
     </div>
   )

@@ -126,7 +126,7 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        <SignUp appearance={clerkAppearance(theme)} />
+        <SignUp appearance={clerkAppearance(theme)} fallbackRedirectUrl="/setup" />
       </div>
     </div>
   )
