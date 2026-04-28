@@ -730,10 +730,10 @@ export default function Home() {
           </div>
           <div className="footer-bottom">
             <div className="footer-legal">
-              <a href="#" className="footer-legal-link">Terms of Service</a>
-              <a href="#" className="footer-legal-link">Privacy Policy</a>
-              <a href="#" className="footer-legal-link">Cookie Policy</a>
-              <a href="#" className="footer-legal-link">Contact</a>
+              <a href="/terms" className="footer-legal-link">Terms of Service</a>
+              <a href="/privacy" className="footer-legal-link">Privacy Policy</a>
+              <a href="/cookies" className="footer-legal-link">Cookie Policy</a>
+              <a href="mailto:hello@quarq.io" className="footer-legal-link">Contact</a>
             </div>
             <span style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>© 2026 Quarq Labs. All rights reserved.</span>
           </div>
