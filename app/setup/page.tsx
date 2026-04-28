@@ -181,6 +181,21 @@ export default function SetupWizard() {
   const [slideDir, setSlideDir] = useState<'right' | 'left'>('right')
   const [deploying, setDeploying] = useState(false)
   const [deployError, setDeployError] = useState('')
+  const [checking, setChecking] = useState(true)
+
+  // If user already completed setup, skip straight to chat
+  useEffect(() => {
+    fetch('/api/profile')
+      .then(r => r.json())
+      .then(({ profile }) => {
+        if (profile?.agent_name) {
+          router.replace('/chat')
+        } else {
+          setChecking(false)
+        }
+      })
+      .catch(() => setChecking(false))
+  }, [])
 
   const goNext = () => { setSlideDir('right'); setStep(s => Math.min(s + 1, 4)) }
   const goBack = () => { setSlideDir('left'); setStep(s => Math.max(s - 1, 1)) }
@@ -254,6 +269,8 @@ export default function SetupWizard() {
       default: return false
     }
   }
+
+  if (checking) return null
 
   return (
     <div className="page-container">

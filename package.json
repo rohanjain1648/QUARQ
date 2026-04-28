@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.2.7",
     "@neondatabase/serverless": "^0.9.5",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.0",
@@ -21,6 +22,7 @@
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "svix": "^1.92.2",
     "uuid": "^14.0.0"
   },
   "devDependencies": {

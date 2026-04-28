@@ -1,13 +1,11 @@
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest) {
-  const supabase = await createClient()
+  const authUser = await getAuthUser()
+  if (!authUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const { profileId, supabase } = authUser
 
   const conversation_id = req.nextUrl.searchParams.get('conversation_id')
   if (!conversation_id) {
@@ -18,26 +16,21 @@ export async function GET(req: NextRequest) {
     .from('messages')
     .select('id, role, content, metadata, created_at')
     .eq('conversation_id', conversation_id)
-    .eq('user_id', user.id)
+    .eq('user_id', profileId)
     .order('created_at', { ascending: true })
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   return NextResponse.json({ messages: data })
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = await createClient()
+  const authUser = await getAuthUser()
+  if (!authUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const { profileId, supabase } = authUser
 
-  // 🛠️ CHANGED: Wrapped JSON parsing in try/catch
-  let body;
+  let body
   try {
     body = await req.json()
   } catch {
@@ -56,7 +49,7 @@ export async function POST(req: NextRequest) {
     const { data: existing } = await supabase
       .from('conversations')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('user_id', profileId)
       .eq('channel_id', channel_id)
       .eq('is_active', true)
       .limit(1)
@@ -67,13 +60,11 @@ export async function POST(req: NextRequest) {
     } else {
       const { data: created, error: convError } = await supabase
         .from('conversations')
-        .insert({ user_id: user.id, channel_id, is_active: true })
+        .insert({ user_id: profileId, channel_id, is_active: true })
         .select('id')
         .single()
 
-      if (convError) {
-        return NextResponse.json({ error: convError.message }, { status: 500 })
-      }
+      if (convError) return NextResponse.json({ error: convError.message }, { status: 500 })
       conversation_id = created.id
     }
   }
@@ -82,14 +73,12 @@ export async function POST(req: NextRequest) {
     .from('messages')
     .insert({
       conversation_id,
-      user_id: user.id,
+      user_id: profileId,
       role: 'user',
       content: content.trim(),
     })
 
-  if (insertError) {
-    return NextResponse.json({ error: insertError.message }, { status: 500 })
-  }
+  if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 })
 
   const { data: history } = await supabase
     .from('messages')
@@ -123,7 +112,7 @@ export async function POST(req: NextRequest) {
           'X-Internal-Secret': agentSecret,
         },
         body: JSON.stringify({
-          user_id: user.id,
+          user_id: profileId,
           channel_type,
           prompt: content.trim(),
           history: orderedHistory,
@@ -149,7 +138,7 @@ export async function POST(req: NextRequest) {
     .from('messages')
     .insert({
       conversation_id,
-      user_id: user.id,
+      user_id: profileId,
       role: 'assistant',
       content: agentResponse,
       metadata: agentMetadata,
@@ -157,12 +146,7 @@ export async function POST(req: NextRequest) {
     .select('id, role, content, metadata, created_at')
     .single()
 
-  if (assistantError) {
-    return NextResponse.json({ error: assistantError.message }, { status: 500 })
-  }
+  if (assistantError) return NextResponse.json({ error: assistantError.message }, { status: 500 })
 
-  return NextResponse.json({
-    conversation_id,
-    message: assistantMsg,
-  })
+  return NextResponse.json({ conversation_id, message: assistantMsg })
 }
